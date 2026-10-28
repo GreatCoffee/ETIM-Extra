@@ -1,0 +1,34 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# kate
+*.kate-swp
+
+# other
+eclipse
+run
+
+# long build / run logs (Token 纪律: never into the conversation)
+build-logs/
+testharness/build-logs/
+
+# runtime backups & raw logs
+testharness/playerdata-backup/
+testharness/reports/*.log
+testharness/reports/logs/

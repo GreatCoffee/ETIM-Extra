@@ -1,0 +1,42 @@
+apply from: 'gradle/scripts/helpers.gradle'
+
+repositories {
+    mavenLocal() // Must be last for caching to work
+}
+
+configurations {
+    mixinAgent {
+        canBeConsumed = false
+        canBeResolved = true
+        visible = false
+    }
+}
+
+dependencies {
+    // The main mod is a mixin mod: the dev boot needs the Mixin library and
+    // MixinBooter on the classpath even while this mod itself has no mixin.
+    if (propertyBool('use_mixins')) {
+        String mixin = modUtils.enableMixins("zone.rong:mixinbooter:${propertyString('mixin_booter_version')}", propertyString('mixin_refmap'))
+        implementation (mixin) {
+            transitive = false
+        }
+        annotationProcessor mixin
+        add ('mixinAgent', mixin) {
+            transitive = false
+        }
+    }
+
+    // The etim-1.0.0 dependency (mavenLocal). Coordinates: the main repo
+    // publishes the reobf SRG jar as the main artifact and the MCP-named dev
+    // jar under the 'dev' classifier (`gradlew publishToMavenLocal` in
+    // git-workspace/etim). Dev compile/run must take the 'dev' classifier.
+    // The artifact stays on the classpath — never in run/mods: MixinBooter
+    // rescues mods jars into the classloader while FML also scans the folder,
+    // which yields DuplicateModsFound (FATAL).
+    implementation('io.github.etim:etim:1.0.0:dev') {
+        transitive = false
+    }
+
+    // The runtime order/requirement is declared on @Mod:
+    // dependencies = "required-after:etim".
+}
