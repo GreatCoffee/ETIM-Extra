@@ -113,3 +113,20 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
   - 配置：`ETIMExtraConfig` 加 `shield.mithrilDurability=25600` / `shield.adamantiumDurability=102400` 两键。**配置原则**：无一手来源的派生值可配（耐久）；有一手来源的判值不配（附魔度 100/40、配方 6 锭）。
 - **日志面**：`[ExtraLog]` 新增盾面注册行（`name / maxDamage / enchantability`）与配方行（`shield recipe registered …`）；格挡与磨损判行属主 mod `[BlockLog]`（只读引用，不在本项目造第二通道）。
 - **零落码**：本条为裁定，未动 `src/`；本轮新增文件 = 本条目 + `extra-shield-对照报告-任务书.md`。
+
+## 条 12 · 对照报告核讫 + D-1…D-3 裁定 + A-1 事实勘误（2026-10-28，ETIM-Extra 主会话）
+
+- **核讫对象**：`playground/audit/extra-shield-对照报告.md`（57,157 B / 650 行 / 首字节 `0x23` / CR 0 / U+FFFD 0，与回执逐位相符）。
+- **锚点机械核**：报告内 `X.java:NN` **171 处 / 108 个不同**——其中 162 落在 R196 树／主 mod 树／本项目树，另 9 处是 Forge 类（`Configuration` / `ForgeRegistries` / `RegistryEvent` / `ModelLoader` / `GameRegistry` / `IForgeRegistryEntry`），经 `build/rfg/minecraft-src/java/net/minecraftforge/**` 实测**全部存在** ⇒ **171/171 存在、行号越界 0**。
+- **抽查 6 处引文与源逐字比对**：`enchantment/EnchantmentHelper.java:343-348`（`i <= 0 → return 0` 硬门）、`inventory/ContainerEnchantment.java:337`（`buildEnchantmentList(..., false)`）、`item/Item.java:277-280`（`isDamageable()`）、`entity/EntityLivingBase.java:2978-2979`（`duration <= 0 → return`）、`entity/EntityLiving.java:1130`（`isShield(stack, null)`）、`metal/ETIMMetals.java:40-41`（mithril 64/100/9/LEGENDARY；adamantium 256/40/10/LEGENDARY）——**全部一致**。派生算式与两值（25,600／102,400）复核通过，且报告已原样声明「派生值，非 R196 盾值」。
+- **勘误 E-1（本会话自核，交会话五终审定谳）**：报告 §11.1 `A-1` 与 §0.1 L-5 行的「`RegistryEvent.Register<Item>` 早于 `FMLPreInitializationEvent`」**事实反向**。Forge 1.12.2 `Loader.preinitializeMods()` 的实序是：`fireCreateRegistryEvents()`（`Loader.java:625`）→ `distributeStateMessage(LoaderState.PREINITIALIZATION, …)`（`:629`，按 `LoaderState.java:44` 派发 **FMLPreInitializationEvent**）→ `fireRegistryEvents()`（`:630`，派发 **RegistryEvent.Register**）。⇒ RegistryEvent **晚于** preInit 事件，配置值在 RegistryEvent 处理器里同样可读。**A 级降为事实勘误**（不改变任何落法）；D-3 结论不变，理由改为「主 mod 同形 + 少一个注解类 + 不改 `ETIMExtraConfig` 的既有契约」。
+- **D 裁定**（本会话裁）：
+
+| 位 | 裁定 | 理由 |
+|---|---|---|
+| **D-1** `blocking` 属性首批落不落模型侧 | **① 只注册属性，模型 JSON 不写 `overrides`** | 首批只有 `item/handheld` 一个模型，写 overrides 也指向同一模型（视觉零变化）却多两个资源；3D 批再接 |
+| **D-2** 附魔度覆写面 | **① 只覆写 `getItemEnchantability()`（无参版）** | `item/Item.java:1156-1159` 已委派；主 mod 先例 `ETIMItemAxe.java:63-66` 同形 |
+| **D-3** 注册点 | **① `preInit`** | 主 mod 同形（`ETIM.java:74-77`）；不新增注解类；`ETIMExtraConfig.init` → `ETIMExtraLog.preInit` → `ETIMExtraContent.register` 的顺序已由现骨架自然成立 |
+
+- **接受并登记为已知后果**（不裁改）：B-1 附魔台实际只出 Unbreaking（Mending 走附魔书+铁砧）；B-2 无 vanilla 5 tick 起手门槛（与 R196 一致）；B-3 一个盾横跨两份配置（耐久在本项目、磨损率在主 mod）；C-1…C-6 照登。
+- **零落码**：本条为裁定，未动 `src/`；本轮新增文件 = 本条目 + `extra-shield-终审-任务书.md`。
