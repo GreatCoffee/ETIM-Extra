@@ -33,6 +33,8 @@
 
 **零机制改动**：无 mixin、无事件、无 TEISR、无新日志通道、无 3D 盾模型、无附魔白名单、不禁用 vanilla 盾。
 
+> **口径变更（2026-10-28，账本条 15／条 19）**：本表 `assets/...` 行的「2 模型（`item/handheld`）／2 纹理（16×16 占位）」已被 3D 盾批取代——现为 5 base 模型（`builtin/entity`）+ 1 个共享 `shield_blocking` + 64×64 entity 图集（TEISR 绘制）。机制面仍为零：类 `ETIMExtraItemShield` 的 8 条方法面未变。
+
 ## 3 落码轮冒烟（已过，2026-10-28 20:36）
 
 - 起服：`testharness/build-logs/11-shield-smoke-latest.log`（`B:extraDebugLog=true` 的窗口值）。
@@ -54,14 +56,14 @@
 | **W-4** 半减 + 下限 | `[BlockLog]` `block` | `block player=… src=mob raw=8.000 blocked=4.000 factor=0.500 min=1.000 carrier=etimextra:mithril_shield` | 正：`blocked = max(raw×0.5, 1.0)`、carrier 是本盾；反：carrier `-`／blocked 0 |
 | **W-5** 磨损 rate 臂 | `[BlockLog]` `wear` | `wear player=… item=etimextra:mithril_shield rate=1.000 decay=na raw=8.000 blocked=4.000 wear=4 dur=0->4` | 正：`wear=(int)(blocked×rate)`、`decay=na`、`dur` 增量 = wear；反：`decay` 出数字／dur 不动 |
 | **W-6** 耐久读数 | `[BlockLog]` `probe` | `probe player=… held=etimextra:mithril_shield dur=0/25600` | 正：分母 = 配置值；反：分母 336（继承 ItemShield 的迹象）或 0 |
-| **W-7** 附魔门（用户面） | `[ExtraLog]` + 附魔台 GUI | `shield … enchantability=100`；附魔台三档非 0 | 正：日志值对 + 用户转述「出 Unbreaking」；反：三档全 0 |
+| **W-7** 附魔门（日志面 + 可选 GUI 转述） | `[ExtraLog]` + `[EnchantLog] table power` | `shield … enchantability=100`（adamantium 40）；`[EnchantLog] table power=15 slot0=<a> slot1=<b> slot2=<c>` 三值均 >0 | 正：日志值对 + 三档均 >0（对照 `minecraft:stick` 三档全 0）；反：三档出现 0 |
 | **W-8** 品质不生效（用户面） | tooltip + 静态锚 | 无品质行；`ETIMQuality.hasQualityChannel(this) == false` | 只作静态锚 + 用户转述，不作日志判据 |
 
-**三分口径**：① 纯渲染/手感面（W-7 的附魔名、W-8 的 tooltip）由用户操作 + 原文转述；② 数值面一律以日志行为判；③ 反例命中即失败。
+**三分口径**：① 纯渲染/手感面（W-7 的「实际出什么附魔／附魔名」、W-8 的 tooltip）由用户操作 + 原文转述；② 数值面一律以日志行为判；③ 反例命中即失败。
 
 ## 5 验收线
 
-1. W-1…W-6 全部有行且逐值对；W-7／W-8 用户面转述与非判据登记。
+1. W-1…W-6 全部有行且逐值对；W-7 以 `[ExtraLog] enchantability=` + `[EnchantLog] table slot0/1/2` 日志面判（对照 `minecraft:stick` 全 0），GUI 仅转述；W-8 静态锚 + 转述。
 2. 窗内 **0 rebuild**（jar 字节 + SHA + mtime 起收口同值）。
 3. 客户端面只允许用户操作：物品图标/手持模型非紫黑、显示名「秘银盾／艾德曼盾」、右键进入举盾姿态。
 4. 任何一项反例即 ✗，回落码批文与裁定链，不在窗内改值。
