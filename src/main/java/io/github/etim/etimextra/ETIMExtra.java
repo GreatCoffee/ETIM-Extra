@@ -27,7 +27,7 @@ import io.github.etim.etimextra.shield.ETIMExtraContent;
  *
  * <p>ETIM-Extra 的 {@code @Mod} 入口，主 mod
  * <a href="https://github.com/GreatCoffee/ETIM">Easy Times In Minecraft (etim)</a>
- * 的附属，承载秘银盾与艾德曼盾。</p>
+ * 的附属，承载铜盾、银盾、远古金属盾、秘银盾与艾德曼盾。</p>
  *
  * <p>分工：盾的<em>机制</em>归主 mod（AD-10+SH：1.12 盾的全免段已关闭，任何
  * {@code Item#isShield} 载体在 LivingHurtEvent 上走 R196 减算链减半，磨损为
