@@ -296,3 +296,14 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **订正后字节**：**11,613 B／154 行／first 0x23／CR 0／U+FFFD 0／trailingWS 0**；`2860`、`crop`、`not copied` 三个旧串在 README 内均 **0 命中**。
 - **待裁 2 项（未动）**：① `gradle.properties:25` 的 `mod_description` 仍为 “mithril and adamantium shields”，模组列表页同受影响——该文件 ASCII 安全，但改动会改 jar（`mcmod.info`）⇒ 必须重建 + 重钉，故等用户裁决；② `ETIMExtra.java:30` 中文 javadoc 仍写「承载秘银盾与艾德曼盾」——注释改动预计不改字节码，但需重建确认，一并等裁决。
 - **零落码 / 零 rebuild**：jar **30,259 B／`A223DB6D…44B9A93`／21:32:34** 未动；本次只改 README、任务书订正行与本条账本。
+
+## 条 26 · 两处旧文案改齐 + 重建重钉（用户裁定 A，2026-10-28）
+
+- **裁定**：用户选「两处一次改齐并重建重钉」——① `gradle.properties` 的 `mod_description`（模组列表页可见）；② `ETIMExtra.java:30` 中文 javadoc（两件口径）。
+- **改动**：`mod_description` → `ETIM-Extra -- add-on for Easy Times In Minecraft: five metal shields (copper, silver, ancient metal, mithril, adamantium).`（**纯 ASCII**，`gradle.properties` 非 ASCII 字节 = 0，UTF-8 无 BOM）；javadoc → 「承载铜盾、银盾、远古金属盾、秘银盾与艾德曼盾」。**无逻辑行变动**（注释与构建元数据）。
+- **重建**：`gradlew build` 退出码 0（1s，`19-repin-build.log`）；新 jar **30,285 B**｜SHA-256 `7D3F04F1AF648EE4E7C2EE273DA3599BC17A864D8FA9DF4D5575800476D4EE4D`｜mtime **2026-10-28 22:28:28**｜产品码 commit **`c66c099`**。jar 内 `mcmod.info` 已回读，`description` 为新五金属文案。
+- **冒烟**（`19-repin-server`，stdin `stop`）：`[ExtraLog] preInit` → `[ExtraLog] boot ok - side=SERVER etim=1.0.0 etimextra=0.1.0` → `Done (0.550s)` → `Stopping the server` → `Saving worlds` → `BUILD SUCCESSFUL in 35s`；**0 crash-report**、0 本 mod 异常（日志里 2 条 `crash` 命中是 fernflower 反编译 `CrashReport` 的噪声）。
+- **重钉**：旧钉值 **30,259 B／`A223DB6D…44B9A93`／`7f6c472`／0 rebuild** 自本条起为**历史值**（仍对应此前全部功能窗证据）；新钉值即上。**功能面未重跑**（无逻辑改动，只做加载冒烟）——此为口径，不得把本次当作功能复验。
+- **联动**：README §11 钉值表已同步（30,285 B／`7D3F04F1…D4EE4D`／`c66c099`／「重建 1，仅元数据与注释」）；主 mod 账本条 114 内所记旧钉值同样转为历史值。
+- **过程注记**：核验 jar 内 `mcmod.info` 时 `jar xf` 的误用曾在仓库根生成一个 `mcmod.info`，已删除并确认 `git status` 干净后再提交。
+- **工作区**：产品改动提交 `c66c099`、文档与本条随后提交；0 rebuild 的说法不再适用于本条（本条即 1 次重建）。

@@ -143,11 +143,11 @@ All five shields are closed across the whole chain: server-side values W-1…W-1
 
 | 钉值项 / Pinned item | 值 / Value |
 |---|---|
-| jar | `build/libs/etimextra-0.1.0.jar`，30,259 B |
-| SHA-256 | `A223DB6D959AFBCCFFABD1DC4B3A30F1CBCC5B0CE1B8CC349880AF37F44B9A93` |
-| 产品码 commit / product commit | `7f6c472` |
-| 窗内 rebuild / rebuild in window | 0 |
+| jar | `build/libs/etimextra-0.1.0.jar`，30,285 B |
+| SHA-256 | `7D3F04F1AF648EE4E7C2EE273DA3599BC17A864D8FA9DF4D5575800476D4EE4D` |
+| 产品码 commit / product commit | `c66c099` |
+| 重建 / rebuild | 1（仅元数据与注释；只做冒烟起服，功能窗未重跑）/ 1 (metadata and comments only; smoke boot only, no functional rerun) |
 
-钉值快照日期为 2026-10-28。账本是 `playground/audit/audit-extra-裁定回执.md`（append-only，条 1 起；盾批闭单与交接为条 1–24）；回执目录是 `testharness/reports/`，含五份 `extra-shield-*-verdict.md`。
+钉值快照日期为 2026-10-28（22:28 的元数据与注释批：模组列表描述改为五件盾、入口 javadoc 列全五件；无逻辑改动）。账本是 `playground/audit/audit-extra-裁定回执.md`（append-only，条 1 起；盾批闭单与交接为条 1–24）；回执目录是 `testharness/reports/`，含五份 `extra-shield-*-verdict.md`。
 
-The pinned snapshot is dated 2026-10-28. The ledger is `playground/audit/audit-extra-裁定回执.md` (append-only, starting at entry 1; entries 1–24 cover the shield batch and the hand-off); the verdict directory is `testharness/reports/`, holding five `extra-shield-*-verdict.md` files.
+The pinned snapshot is dated 2026-10-28 (the 22:28 metadata/comment batch: the mod-list description now names all five shields and the entry javadoc lists all five; no logic change). The ledger is `playground/audit/audit-extra-裁定回执.md` (append-only, starting at entry 1; entries 1–24 cover the shield batch and the hand-off); the verdict directory is `testharness/reports/`, holding five `extra-shield-*-verdict.md` files.
