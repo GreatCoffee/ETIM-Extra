@@ -198,3 +198,24 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **执行方口径**：本批无新机制面，按「零行为面工装可主会话直裁」由主会话执行，**未经会话七**；残留判据缺口 = 「真实合成动作」（当前证明的是注册值与配方内容，不是消耗 6 锭产出盾）＋ 五件逐一受击臂。是否补开正式窗，待裁。
 - **新钉值**：`build/libs/etimextra-0.1.0.jar` **30,259 B** @ 2026-10-28 21:32:34｜SHA-256 `A223DB6D959AFBCCFFABD1DC4B3A30F1CBCC5B0CE1B8CC349880AF37F44B9A93`（前钉 20,680 B／`9FFE0D27…` 作废）。
 - **遗留项**：客户端三面（五件图标可辨／名字／右键姿态）由用户肉眼判；会话七正式窗（合成臂 + 受击臂）；锈铁盾与金/铁盾**明确不做**。
+
+## 条 17 · 盾面补种「真实合成消耗 6 锭」验证窗（W-13 / W-14，2026-10-28）
+
+- **触发**：用户指令「补『真实合成消耗 6 锭』」——补条 16 自认的判据缺口（注册行只证明配方**内容**，证明不了**合成动作**可执行、6 锭真被吃掉）。
+- **判据正本**：`playground/audit/extra-shield-补种批文.md` §3（本会话就地补 W-13／W-14 两行 + §4 验收线）；回执 `testharness/reports/extra-shield-craft-verdict.md`；驱动 `testharness/player/extra-shield-craft.js`。
+- **W-13 六锭门（铜盾腿，数量敏感）**：只摆 5 格（缺右下）→ 结果槽 **null**；补第 6 锭 → 结果槽 `etimextra:copper_shield#0×1`。⇒ 配方是**恰好 6 锭**的固定形状，不是「≥5」。
+- **W-14 真实合成（五腿全 PASS）**：生存模式下每腿 `/clear` + `/give 6` → 工作台逐格摆 6 锭 → 左键结果槽 arm → 主 mod 计时器走完 → 库存读回 **锭 6→0、盾 0→1**：
+
+| 金属 | 结果槽 `sig` | 完成行 |
+|---|---|---|
+| 铜 | `etimextra:copper_shield#0×1` | `COMPLETE Copper Shield ×1 quality=AVERAGE xp=0` |
+| 银 | `etimextra:silver_shield#0×1` | `COMPLETE Silver Shield ×1 quality=AVERAGE xp=0` |
+| 远古金属 | `etimextra:ancient_metal_shield#0×1` | `COMPLETE Ancient Metal Shield ×1 quality=AVERAGE xp=0` |
+| 秘银 | `etimextra:mithril_shield#0×1` | `COMPLETE Mithril Shield ×1 quality=AVERAGE xp=0` |
+| 艾德曼 | `etimextra:adamantium_shield#0×1` | `COMPLETE Adamantium Shield ×1 quality=AVERAGE xp=0` |
+
+- **走的是主 mod 真实路径**（不是补丁式验证）：`result click btn=0` → `start crafting difficulty=150.0 quality=AVERAGE period=102` → `COMPLETE … continue`。`difficulty=150.0` = 6 × 通用材料 25（`CraftingDifficulty` 对 etim 锭无专行）；`period=102` 由主 mod 计时器算出，窗内等满 102 tick + 4 s 余量。`quality=AVERAGE xp=0` 同时复核裁 T-4（盾非品质载体）。
+- **口径登记**：必须生存模式——`ETIMConfig.craftingSkipCreative=true`（默认），创造会跳过计时器，只能验证「格子能出产物」，验证不了「真实合成」。
+- **冲突分级**：**A 0 / B 0 / C 3** —— C-1 逐格摆料途中结果槽会短暂出现 `etim:nugget_*#0×9`（1 锭→9 粒的分裂配方），是逐格点击的副产物，5 格时结果为空、6 格才出盾，不干扰判点；C-2 mineflayer 对 mod 物品名解析为 `unknown`，库存断言按数值 type id + 服务端 `sig`/`COMPLETE` 双证；C-3 本窗由主会话执行（驱动属本项目工装），非会话七。
+- **钉值不变**：jar **30,259 B**／SHA-256 `A223DB6D…44B9A93`／mtime 21:32:34——**0 rebuild**，与条 16 同一构建（`7f6c472`）。生命周期 `Done (0.537s)` → 五腿 → `Saving worlds`，退出码 0，0 crash-report；`B:craftingDebugLog` 窗内 true、收口还原 false。
+- **判点 ✗ 0**；**本批判据缺口闭合**。遗留：会话七独立复跑（可选）、W-12 客户端三面待用户肉眼判。

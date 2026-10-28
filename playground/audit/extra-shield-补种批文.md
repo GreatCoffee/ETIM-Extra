@@ -42,15 +42,19 @@
 | **W-10** 配方 6 锭 + 产物 | `[ExtraLog]` | `shield recipe=etimextra:shield_copper ingot=etim:ingot_copper count=6 output=etimextra:copper_shield`（另两条同形）；`shield recipes total=5` | 正：5 行 `count=6` 且 `ingot`/`output` 逐条配对；反：`count≠6`、缺行、`total≠5` |
 | **W-11** 形状合约（静态锚） | 代码 + javap | `ETIMExtraContent.INGOTS_PER_SHIELD = 6` 在注册后对已注册配方非空格数做 `!=6 ⇒ throw`；`javap` 复核常量与调用 | 只作静态锚（反例无法用日志判：形状打错时加载直接中止，日志停在该 throw） |
 | **W-12** 客户端三面（用户面） | 用户肉眼 | 五件图标可辨、名字「铜盾／银盾／远古金属盾／秘银盾／艾德曼盾」、右键举盾姿态（五件同形） | 只作转述，不作日志判据 |
+| **W-13** 六锭门（数量敏感） | 工作台结果槽 + 库存 | 铜盾：只摆 5 格 → 结果槽**空**；补第 6 锭 → 结果槽**出现盾** | 正：5 空 / 6 有；反：5 锭即出盾（⇒ 配方不是 6 锭）或 6 锭仍空（⇒ 形状错位） |
+| **W-14** 真实合成消耗 6 锭（五金属） | `[CraftingLog]` + 假玩家库存 | 每金属一腿：`/give 6` → 工作台摆 6 格 → 左键结果槽 arm → 计时走完 → `COMPLETE <盾名> ×1 quality=AVERAGE xp=0`；库存读回 **锭 −6、盾 +1** | 正：五腿 `consumed=6 && gained=1`；反：任一腿锭不少／盾不出／`quality≠AVERAGE`（盾不是品质载体） |
 
 **W-10 强化说明**：首批 `count=6` 是照抄入参的常量，形状打错也照样打 6。本批起 `count` / `ingot` / `output` 全部从 `CraftingManager.REGISTRY` 里**已注册**的配方反读，形状与判行脱节会当场抛异常或打出不符值。
+**W-13／W-14 为什么必须真合成**：W-9/W-10 只证明「注册表里有一条 6 格配方、材料是锭、产物是盾」，证明不了「玩家摆出这个形状真能拿到盾、6 个锭真被吃掉」。W-13 用「5 锭不出 / 第 6 锭才出」把数量钉死；W-14 在生存模式下走主 mod 的真实合成计时器（`craftingTimer=true`、`craftingSkipCreative=true` 对创造生效，故必须生存），读回库存差值与 `[CraftingLog]` 完成行。
 
 ## 4 验收线
 
 1. W-9／W-10 全部有行且逐值对；W-11 静态锚通过；W-12 用户转述。
-2. 窗内 **0 rebuild**（jar 字节 + SHA + mtime 起收口同值）。
-3. 服务生命周期：`Done` → `Stopping the server` → `Saving worlds`，退出码 0，0 crash-report。
-4. 任何一项反例即 ✗，回落码批文与裁定链，不在窗内改值。
+2. W-13：5 格结果为空、6 格出现盾；W-14：五腿 `consumed=6 && gained=1` 且完成行 `xp=0`（盾非品质载体）。
+3. 窗内 **0 rebuild**（jar 字节 + SHA + mtime 起收口同值）。
+4. 服务生命周期：`Done` → `Stopping the server` → `Saving worlds`，退出码 0，0 crash-report。
+5. 任何一项反例即 ✗，回落码批文与裁定链，不在窗内改值。
 
 ## 5 不在本批（禁止顺手加）
 
