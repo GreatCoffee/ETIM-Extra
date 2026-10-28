@@ -130,3 +130,15 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 
 - **接受并登记为已知后果**（不裁改）：B-1 附魔台实际只出 Unbreaking（Mending 走附魔书+铁砧）；B-2 无 vanilla 5 tick 起手门槛（与 R196 一致）；B-3 一个盾横跨两份配置（耐久在本项目、磨损率在主 mod）；C-1…C-6 照登。
 - **零落码**：本条为裁定，未动 `src/`；本轮新增文件 = 本条目 + `extra-shield-终审-任务书.md`。
+
+## 条 13 · 终审核讫 + 落码批文 + 盾面首批落码（2026-10-28，ETIM-Extra 主会话）
+
+- **终审回执**：`playground/audit/extra-shield-终审回执.md`（27,847 B / 220 行）。L-1…L-11 **逐面 ✓，无一打回**；A3／B4／C6 维持；与报告 §3.2 伪代码**零偏差**；无新增待裁位。
+- **E-1 定谳 = 确认**（`Loader.java:625` fireCreateRegistryEvents → `:629` distributeStateMessage(PREINITIALIZATION) → `:630` fireRegistryEvents；`LoaderState.java:44`；`GameData.java:834-850`）：RegistryEvent.Register **晚于** FMLPreInitializationEvent。报告的 A-1 降为事实勘误，**「唯一性」论据作废**，D-3 ① 结论不变（B-审1，知悉项，无需动作）。
+- **接受 C-审1**：报告 L-1⑤⑥⑦ 的区间行号比方法声明行早一行（`ItemShovel:25-28` 实 `:26-28` 等），含真锚零后效；本条 11 自用的 `:26`／`:32` 为精确行，不矛盾。
+- **接受旁证**：主 mod `ETIMBiomeUnderworld.java:58-59` 的 javadoc 带同款反向时序句——E-1 病灶溯源；下游**不得**引注释当时序依据。
+- **落码批文**：`playground/audit/extra-shield-落码批文.md`（判据正本：判值正本表 + 落码清单 + W-1…W-8 判点 + 验收线）。
+- **落码执行**（本会话）：新增 java 3（`shield/ETIMExtraItemShield`、`shield/ETIMExtraContent`、`client/ETIMExtraItemModels`）＋ 改 java 3（`ETIMExtraConfig` +2 键、`ETIMExtraLog` +3 行方法、`ETIMExtra` preInit +1 行）＋ 新增资源 6（2 模型／2 纹理 16×16 占位／2 lang）。**零机制改动**：无 mixin／无事件注册／无 TEISR／无新通道／无 3D 盾模型／无附魔白名单。
+- **落码轮冒烟**：`testharness/build-logs/11-shield-smoke-latest.log`——`[ExtraLog] shield item=etimextra:mithril_shield metal=mithril maxDamage=25600 enchantability=100 stack=1`、`…adamantium_shield … maxDamage=102400 enchantability=40 stack=1`、两条 `shield recipe=… count=6`、`shield recipes total=2`、`boot ok - side=SERVER etim=1.0.0 etimextra=0.1.0`；`Done (0.625s)!` → `Stopping the server` → `Saving worlds`；`run/config/etimextra.cfg` 生成 `shield` 节两键。
+- **钉值**：`build/libs/etimextra-0.1.0.jar` **14,170 B** @ 2026-10-28 20:35:50｜SHA-256 `470809B038359F706EE22419538DBC2433C5CAE15D56D145217E813F23E5519A`。
+- **下一环**：会话七 验证窗（判据正本 = 落码批文 §4；任务书 `extra-shield-验证窗-任务书.md`）。

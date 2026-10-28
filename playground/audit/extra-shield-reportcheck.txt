@@ -1,0 +1,13 @@
+﻿file      : D:\OpenCodeWorkspace\ETIM-Extra\playground\audit\extra-shield-瀵圭収鎶ュ憡.md
+bytes     : 57157
+lines     : 650
+firstByte : 0x23
+utf8/bom  : ok / none
+cr/fffd   : 0 / 0
+tick/cross: 21 / 3
+anchors   : 118 (missing 0)
+tables    : 30 (bad rows 0)
+faces     : 0 {}
+grades    : A0 B0 C0 D0
+
+OK

@@ -8,6 +8,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import io.github.etim.etimextra.shield.ETIMExtraContent;
+
 /**
  * The {@code @Mod} entry of ETIM-Extra, the add-on of
  * <a href="https://github.com/GreatCoffee/ETIM">Easy Times In Minecraft (etim)</a>
@@ -59,6 +61,9 @@ public final class ETIMExtra {
     public void preInit(FMLPreInitializationEvent event) {
         ETIMExtraConfig.init(event);
         ETIMExtraLog.preInit();
+        // Ruling D-3 ①: content after the config (the constructors read it) and
+        // after the load row (which means "config live, registration starting").
+        ETIMExtraContent.register();
     }
 
     /**

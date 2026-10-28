@@ -31,6 +31,25 @@ public final class ETIMExtraConfig {
      *  即返回，对数值零影响。 */
     public static boolean extraDebugLog = false;
 
+    // shield ------------------------------------------------------
+    /**
+     * 秘银盾耐久（<b>派生值</b>：{@code 4.0F × 1 × 64.0F × 100.0F} — R196
+     * {@code ItemTool.java:36-42} + {@code EnumEquipmentMaterial.java:14}，
+     * {@code components=1} 由裁定 T-1 定）。R196 无盾（立项摸底 A-1），故它不是
+     * 一手盾值；玩家可感知，故可配。
+     *
+     * <p>Mithril shield max damage — DERIVED, not an R196 shield value.</p>
+     */
+    public static int shieldMithrilDurability = 25600;
+
+    /**
+     * 艾德曼盾耐久（<b>派生值</b>：{@code 4.0F × 1 × 256.0F × 100.0F} — 同上，
+     * {@code :15}）。性质同秘银盾。
+     *
+     * <p>Adamantium shield max damage — DERIVED, not an R196 shield value.</p>
+     */
+    public static int shieldAdamantiumDurability = 102400;
+
     private ETIMExtraConfig() {
     }
 
@@ -42,6 +61,14 @@ public final class ETIMExtraConfig {
         extraDebugLog = config.getBoolean("extraDebugLog", "debug", extraDebugLog,
                 "Dev judgement channel [ExtraLog] for the shield rows (off = rows return"
                         + " immediately, zero effect on values)");
+        shieldMithrilDurability = config.getInt("mithrilDurability", "shield", shieldMithrilDurability, 1, 1 << 20,
+                "Mithril shield max damage; DERIVED = 4.0 x 1 x 64.0 x 100 (R196 ItemTool.java:36-42"
+                        + " + EnumEquipmentMaterial.java:14; components=1 by ruling T-1)."
+                        + " NOT an R196 shield value");
+        shieldAdamantiumDurability = config.getInt("adamantiumDurability", "shield", shieldAdamantiumDurability,
+                1, 1 << 20,
+                "Adamantium shield max damage; DERIVED = 4.0 x 1 x 256.0 x 100 (:15)."
+                        + " NOT an R196 shield value");
         if (config.hasChanged()) {
             config.save();
         }

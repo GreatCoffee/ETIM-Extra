@@ -1,0 +1,7 @@
+﻿node : usage: node report-check.js <report.md> [--roots=a;b] [--quiet]
+所在位置 行:1 字符: 1
++ node "D:\OpenCodeWorkspace\Easy Times In Minecraft\.opencode\skills\e ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (usage: node rep...=a;b] [--quiet]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

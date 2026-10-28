@@ -45,6 +45,41 @@ public final class ETIMExtraLog {
         row("boot ok - side=" + side + " etim=" + etimVersion + " etimextra=" + version);
     }
 
+    // ==================== shield batch rows (W-1 / W-2) ====================
+
+    /**
+     * W-1 registration row: the only line that proves the shield constructor
+     * read the config ({@code maxDamage}) and the R196 material row
+     * ({@code enchantability}) instead of falling back to 0.
+     *
+     * <p>W-1 注册行：唯一能证明盾构造器真的读到了配置（maxDamage）与 R196 材料行
+     * （enchantability）而没有回落 0 的一行。</p>
+     */
+    public static void shield(String name, String metal, int maxDamage, int enchantability, int stack) {
+        if (!ETIMExtraConfig.extraDebugLog) {
+            return;
+        }
+        row("shield item=" + ETIMExtra.MOD_ID + ":" + name + " metal=" + metal
+                + " maxDamage=" + maxDamage + " enchantability=" + enchantability + " stack=" + stack);
+    }
+
+    /** W-2 recipe row: one line per shaped recipe, with the six-ingot count. W-2 配方行：一条配方一行，带 6 锭计数。 */
+    public static void shieldRecipe(String name, String ingot, int count) {
+        if (!ETIMExtraConfig.extraDebugLog) {
+            return;
+        }
+        row("shield recipe=" + ETIMExtra.MOD_ID + ":" + name + " ingot=" + ingot + " count=" + count);
+    }
+
+    /** W-2 companion: the recipe count actually present in the vanilla registry.
+     *  W-2 伴生行：注册表里真实存在的本 mod 配方数。 */
+    public static void shieldRecipeCount(int count) {
+        if (!ETIMExtraConfig.extraDebugLog) {
+            return;
+        }
+        row("shield recipes total=" + count);
+    }
+
     // ==================== channel launcher (ETIMBlockLog:169-173 shape) ====================
 
     private static void row(String line) {
