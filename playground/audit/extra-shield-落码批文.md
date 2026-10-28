@@ -40,7 +40,7 @@
 - 生命周期：`Done (0.625s)!` → `Stopping the server` → `Saving worlds`（stdin `stop`，0 异常）。
 - 配置落地：`run/config/etimextra.cfg` 生成 `shield` 节，两键默认值如判值正本。
 - 钉值：`build/libs/etimextra-0.1.0.jar` **14,170 B** @ 2026-10-28 20:35:50｜SHA-256 `470809B038359F706EE22419538DBC2433C5CAE15D56D145217E813F23E5519A`。
-- **注意**：本行长尾没有 `[server]` 后缀（主 mod 的 `[BlockLog]` 同样没有），判据按上列原样匹配，`[server]` 一类尾标不入判据。
+- **尾标口径（验证窗勘误 C-1，2026-10-28 订正）**：`[ExtraLog]` 行**无**尾标；主 mod 的 `[BlockLog]` 行**有** `[server]` 尾标（主 mod logger 追加）。判据按行内 `key=value` 字段匹配，**尾标不入判据**。原文「主 mod 的 `[BlockLog]` 同样没有」失实，已作废。
 
 ## 4 判点（W-1…W-8，验证窗逐点核讫）
 

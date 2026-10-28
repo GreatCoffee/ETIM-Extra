@@ -34,3 +34,24 @@ powershell -NoProfile -ExecutionPolicy Bypass -File testharness\server\run-serve
 
 - 盾面判点：耐久 = 材料判值；每击磨损 = `(int)(blocked × shieldWearRate)`；`[BlockLog]` 行（主 mod 通道）对材料盾的读数。
 - 客户端面（盾 3D 姿态/图标）由用户操作，AI 只收读截图文件。
+
+## 交互窗（需要中途下发命令时用这套，2026-10-28 盾面首批验证窗建立）
+
+`run-server.ps1` 是「跑满 N 秒自动停」的一次性冒烟件，中途不能下发命令；需要边跑边下发的窗用下面三件：
+
+| 文件 | 用途 |
+|---|---|
+| `server/server-console.js` | 把 `gradlew runServer` 拉起来并**保留 stdin 管道**，全量 tee 到 `build-logs/<tag>.out`，按行喂给监听者；`send(line)` 下发一条服务器命令，`stop()` 优雅停 |
+| `server/console-probe.js` | stdin 通道自检：起服 → `say` → 查日志 → `stop`；判「运行中途能否写入」（本窗实测可） |
+| `player/extra-shield-run.js` / `extra-shield-enchant.js` | 盾面 W-1…W-7 driver（盾面首批正本窗）；判行解析 + 逐点判定 + 证据 JSON 落 `build-logs/` |
+
+### 三条工装纪律（盾面首批验证窗实测，2026-10-28）
+
+1. **假人必须 op**：`/etest hurt <mob-selector>` 走 `EntitySelector.matchOneEntity`，入口 `EntitySelector.java:135` 要求 `sender.canUseCommand(1, "@")`；权限级 0 时解析为空集**且不抛异常**，日志只留 `NO_TARGET`（无 `detail=`）。先写 `run/ops.json`（离线 UUID）或窗内控制台 `op`。
+2. **每臂复位血量**：R196 基座 `capAtLevel0=6`（`PlayerStatLimits.java:29`），不是 1.12 的 20；8 点 raw 减半后 4 点，多臂连打会致死。每臂后 `etest health 6`。
+3. **单只 mob + Tags**：`matchOneEntity` 要求**恰好一个**匹配；每臂先 `kill @e[type=!player]`，再召唤一只带 `Tags:["shx"]` 的（`NoAI:1b,Silent:1b,PersistenceRequired:1b`），选择器用 `@e[type=zombie,tag=shx]`。
+
+### 附魔面日志判据（替代附魔台 GUI）
+
+`/etest enchantprobe mainhand` 直接调 `EnchantmentHelper.calcItemStackEnchantability`（`CommandDevTest.java:380`），落 `[EnchantLog] table power=15 slot0=… slot1=… slot2=…`。盾（附魔度 100/40）三档非 0，`minecraft:stick`（附魔度 0）三档全 0 —— 「附魔台三档非 0」因此可以日志判，不必依赖用户开 GUI。
+

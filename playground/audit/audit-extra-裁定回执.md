@@ -142,3 +142,23 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **落码轮冒烟**：`testharness/build-logs/11-shield-smoke-latest.log`——`[ExtraLog] shield item=etimextra:mithril_shield metal=mithril maxDamage=25600 enchantability=100 stack=1`、`…adamantium_shield … maxDamage=102400 enchantability=40 stack=1`、两条 `shield recipe=… count=6`、`shield recipes total=2`、`boot ok - side=SERVER etim=1.0.0 etimextra=0.1.0`；`Done (0.625s)!` → `Stopping the server` → `Saving worlds`；`run/config/etimextra.cfg` 生成 `shield` 节两键。
 - **钉值**：`build/libs/etimextra-0.1.0.jar` **14,170 B** @ 2026-10-28 20:35:50｜SHA-256 `470809B038359F706EE22419538DBC2433C5CAE15D56D145217E813F23E5519A`。
 - **下一环**：会话七 验证窗（判据正本 = 落码批文 §4；任务书 `extra-shield-验证窗-任务书.md`）。
+
+## 条 14 · 盾面首批验证窗核讫 + 闭单（2026-10-28，ETIM-Extra 主会话）
+
+- **验证回执**：`testharness/reports/extra-shield-verdict.md`（27,249 B / 330 行 / 首字节 `0x23` / CR 0 / U+FFFD 0）。
+- **钉值（起窗 = 收口，逐位）**：jar **14,170 B**｜SHA-256 `470809B038359F706EE22419538DBC2433C5CAE15D56D145217E813F23E5519A`｜mtime 2026-10-28 20:35:50｜HEAD `54eed94`｜**0 rebuild**（8 轮 runServer 未重跑 jar/reobf）。
+- **判点**：W-1…W-8 **全 ✓，判点 ✗ = 0**；冲突分级 **A 0 / B 0 / C 6**。
+- **本会话独立复核**（直接 grep 窗口日志，不采信转述）：`gate … active=etimextra:mithril_shield src=mob suppressed=true`、`wear … rate=1.000 decay=na wear=4 dur=0->4`、`block … raw=8.000 blocked=4.000 factor=0.500 min=1.000 carrier=etimextra:mithril_shield`、下限臂 `raw=1.000 → blocked=1.000`（非 0.500，地板生效）、`probe … dur=0/25600` 与磨损后 `dur=4->5`、`[EnchantLog] table power=15 slot0=4 slot1=12 slot2=30`（mithril）／`7/11/30`（adamantium）——全部与批文 §4 预期行一致。
+- **工装面已还原**：`run/config/etim.cfg` 的 `blockDebugLog` 窗内 true、收口回 false（回读同值）；`run/ops.json` 新增工装 op 账号（`run/` 不入版本库）。
+- **待裁 5 项裁定**：
+
+| # | 事项 | 裁定 |
+|---|---|---|
+| 1 | C-1 批文尾标口径 | **接受**：批文 §3 就地订正（`[ExtraLog]` 无尾标、`[BlockLog]` 有 `[server]`；判据按行内字段匹配）——只改说明，不改任何判点 |
+| 2 | C-2/C-3/C-4 工装纪律 | **接受并固化**：假人必须 op／每臂 `etest health 6` 复位（R196 `capAtLevel0=6`）／单只 mob + `Tags`——已入 `testharness/README.md` |
+| 3 | C-5 客户端四面 + 附魔台 GUI | **不开专门窗**：本批 W-7 已有日志面判据（`[EnchantLog]` 三档非 0 + 对照组 stick 全 0），GUI 与图标/模型/显示名/姿态全部降为「用户肉眼遗留项」，**不阻断闭单**；用户随时可在自己客户端确认 |
+| 4 | W-7 判面 | **改判为日志面**：`[ExtraLog] enchantability=` + `[EnchantLog] table slot0/1/2` 非 0，对照组全 0；GUI 仅作转述 |
+| 5 | 闭单 | **闭单**：A 级 0、B 级 0、判点 ✗ 0 |
+
+- **本批结论**：秘银盾 / 艾德曼盾 服务端面**闭单**（物品注册、派生耐久、6 锭配方、isShield 格挡链、半减、地板、磨损、附魔门、品质不接 全部有可 grep 行）。唯一遗留 = 客户端观感面（图标/手持模型/显示名/右键姿态/tooltip），由用户肉眼确认，非判据、不阻塞。
+- **遗留项登记**：客户端观感（未做，用户随时可做）；3D 盾模型 / TEISR / Mending 白名单 / 禁用 vanilla 盾 / 盾的品质档——**仍不在范围**（批文 §6）。
