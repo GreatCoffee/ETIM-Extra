@@ -41,7 +41,7 @@
 | **W-9** 三件注册 + 派生耐久 | `[ExtraLog]` | `shield item=etimextra:copper_shield metal=copper maxDamage=1600 enchantability=30 stack=1`；`silver_shield` **1600／30**；`ancient_metal_shield` **6400／40** | 正：三行逐字对，且秘银 25600／100、艾德曼 102400／40 两行仍在；反：任一 `maxDamage` 落在 336／0／他金属值 |
 | **W-10** 配方 6 锭 + 产物 | `[ExtraLog]` | `shield recipe=etimextra:shield_copper ingot=etim:ingot_copper count=6 output=etimextra:copper_shield`（另两条同形）；`shield recipes total=5` | 正：5 行 `count=6` 且 `ingot`/`output` 逐条配对；反：`count≠6`、缺行、`total≠5` |
 | **W-11** 形状合约（静态锚） | 代码 + javap | `ETIMExtraContent.INGOTS_PER_SHIELD = 6` 在注册后对已注册配方非空格数做 `!=6 ⇒ throw`；`javap` 复核常量与调用 | 只作静态锚（反例无法用日志判：形状打错时加载直接中止，日志停在该 throw） |
-| **W-12** 客户端三面（用户面） | 用户肉眼 | 五件图标可辨、名字「铜盾／银盾／远古金属盾／秘银盾／艾德曼盾」、右键举盾姿态（五件同形） | 只作转述，不作日志判据 |
+| **W-12** 客户端三面（用户面） | 用户肉眼 | 五件图标可辨、名字「铜盾／银盾／远古金属盾／秘银盾／艾德曼盾」、右键举盾姿态（五件同形） | **用户裁定 2026-10-28：均正常 ✓**（转述，不作日志判据） |
 | **W-13** 六锭门（数量敏感） | 工作台结果槽 + 库存 | 铜盾：只摆 5 格 → 结果槽**空**；补第 6 锭 → 结果槽**出现盾** | 正：5 空 / 6 有；反：5 锭即出盾（⇒ 配方不是 6 锭）或 6 锭仍空（⇒ 形状错位） |
 | **W-14** 真实合成消耗 6 锭（五金属） | `[CraftingLog]` + 假玩家库存 | 每金属一腿：`/give 6` → 工作台摆 6 格 → 左键结果槽 arm → 计时走完 → `COMPLETE <盾名> ×1 quality=AVERAGE xp=0`；库存读回 **锭 −6、盾 +1** | 正：五腿 `consumed=6 && gained=1`；反：任一腿锭不少／盾不出／`quality≠AVERAGE`（盾不是品质载体） |
 
