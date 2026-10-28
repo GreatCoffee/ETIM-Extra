@@ -248,3 +248,14 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **C-3 处置（新纪律入账）**：窗内用 PowerShell 默认编码读写 `etim.cfg`，给文件加了 BOM 并把注释里的非 ASCII 箭头写成替换字符（30,629→30,672 B）；因键值全 ASCII，窗内解析不受影响，收口用**窗前字节副本整体还原**。新增第 6 条工装纪律：**改配置只用 UTF-8 无 BOM 写入（`[IO.File]::WriteAllText` + `UTF8Encoding($false)`），或直接字节副本还原**——已入 `testharness/README.md`。
 - **本批状态**：五金属盾 = 服务端数值面 + 真实合成面 + 客户端面（用户裁定）**全闭**；唯一可选残留 = 「实际出什么附魔／附魔名」的转述。
 - **零落码 / 零 rebuild**：本条只落文档；钉值与 W-13／W-14 结论不变。
+
+## 条 21 · 三件新盾逐一受击窗核讫（W-15，2026-10-28）
+
+- **触发**：用户指令「验证第一大项的两个小项」——第一项 = 三件新盾（铜／银／远古金属）的逐一受击臂；此前格挡链只在秘银／艾德曼上跑过。
+- **判据正本**：`playground/audit/extra-shield-补种批文.md` §3 W-15（本会话就地新增行）＋ §4 验收线 2；回执 `testharness/reports/extra-shield-family-hit-verdict.md`；驱动 `testharness/player/extra-shield-family-hit.js`。
+- **窗内判行（三件逐件六项齐，全 PASS）**：`carrier item=<盾> class=…ETIMExtraItemShield`；`gate … active=<盾> src=mob suppressed=true`；`block … raw=8.000 blocked=4.000 factor=0.500 min=1.000 carrier=<盾>`；地板臂 `raw=1.000 → blocked=1.000`；`wear … rate=1.000 decay=na wear=4 dur=0->4`、续臂 `wear=1 dur=4->5`；`probe … dur=0/<max>` → `dur=5/<max>`，分母 **1600／1600／6400** 与各件配置值一致。
+- **口径登记**：`carrier … block=false` 是 `ETIMBlocking.isBlockCarrier`（主 mod **工具**格挡臂）字段；盾走 `isShieldStack` 臂，故 false 为预期值，真正的门证是 `gate … suppressed=true` + `block … carrier=<盾>`。
+- **冲突**：**A 0 / B 0 / C 2** —— C-1 首跑驱动自身正则写错（拿 `dur=0/<max>` 去匹配已捕获的 `0/<max>`），三腿误报 FAIL；产品行本身正确，修正后复跑 PASS，首跑产物留档 `17-shield-family-hit-attempt1.*`；C-2 即上条 `block=false` 读法。
+- **配置**：`blockDebugLog` 窗内 true、收口按窗前字节副本整体还原——回读 **30,629 B／SHA `44E368E5…AE9F2E`**，逐字节同值（工装纪律 6 首次实战落地）。
+- **钉值不变**：jar **30,259 B／`A223DB6D…44B9A93`／21:32:34**，**0 rebuild**；退出码 0，0 crash-report，端口 0。
+- **本批状态**：五件盾的**逐一受击链**至此全部验过（首批秘银／艾德曼 + 本条三件）；剩余只有客户端面的「实际出什么附魔名」用户观察（同批第二小项，另起客户端窗）。
