@@ -72,3 +72,11 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - 复验（`testharness/build-logs/09-smoke-latest.log`，52,091 B）：`[ExtraLog] preInit` → `boot ok - side=SERVER etim=1.0.0 etimextra=0.1.0` → `Done (0.709s)!` → `Stopping the server`；`run/config/etimextra.cfg` 生成含 `B:extraDebugLog=false`；Gradle BUILD SUCCESSFUL。
 - **新钉值**：`etimextra-0.1.0.jar` 4,928 B @ 2026-10-28 18:57:41｜SHA-256 `0A0BD8B4360EF0BB245694D70F8C9B3E418CB1D1BDE215DA661C6F116532EFB1`（条 6 的 3,205 B / `28E05FA9…335CC` 退役）。
 - 自检五问：排版 ✓｜注释密度 ✓（新类双语）｜判值锚 ✓（本批无判值，锚 = audit-extra 条 1/6 + D-3）｜判据通道 ✓｜config 门面 ✓。
+
+## 条 9 · 流程自陈与更正（2026-10-28，收到组织关系澄清后）
+
+- **更正前提**：会话五/二/六/七/九 均属主 mod 项目（D:\OpenCodeWorkspace\Easy Times In Minecraft\），按需出借；用户是唯一中转；本会话只持 ETIM-Extra 的盖章、判值与账本。
+- **自陈 1（越位推导）**：条 3 的耐久候选 S1~S4 是我用「1.12 盾底座 + 主 mod `ETIMMetals` 已落材料行 + MITE-RB-2025 先例」自行对位得出的草案——**对位属会话六职责、一手属会话二职责**。条 3 保留为过程记录，其候选**不作判值、不进批文**；正式对位表以会话六产出为准，材料行以会话二回件为准。
+- **自陈 2（转引标注不足）**：条 3 中 mithril/adamantium 的 durability / enchantability / armorPoints 系转引自主 mod `ETIMMetals` 类头 javadoc（主 mod 判值），非本项目一手；会话二回件到达前不得作为本项目判值引用。
+- **自陈 3（主项目构建面动作）**：为解依赖阻塞，我曾手工把 `etim-1.0.0-dev.jar` 与自写 pom 装入 `~/.m2`；随后主项目 `extra.gradle` 出现 `etimLocal` 发布面，我的手工件覆盖了其中部分产物；我已复跑 `gradlew publishToMavenLocal`（主项目构建动作，**未改任何源码**）复原为：主制品 762,605 B / dev 746,954 B / sources 683,689 B / 官方 pom。现 `~/.m2` 无手工残留。**发布面文件改动仍未提交，须由主 mod 主会话收口**（跨项目任务书已出，见本轮回执）。
+- **后续动作口径**：一手判值 → 会话二；对位/对照报告/判行锚 → 会话六；终审 → 会话五；测试执行 → 会话七；主项目账本挂条 → 主 mod 主会话（用户中转）。本会话不再自行检索 `mite-src` 产出判值。
