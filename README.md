@@ -58,6 +58,13 @@ Boots `runServer`, types `stop` into the server console after N seconds (stock
 `run/logs/latest.log` to `testharness/build-logs/<Tag>-latest.log`.
 
 
+## Configuration and judgement channel
+
+`config/etimextra.cfg` (Forge Configuration) holds every player-perceivable
+value; today only the dev switch `debug.extraDebugLog`, loaded once in
+`preInit`. The two load rows `[ExtraLog] preInit` / `[ExtraLog] boot ok - ...`
+are ungated on purpose — they are the smoke round's assertion.
+
 ## Layout
 
 | Path | Contents |

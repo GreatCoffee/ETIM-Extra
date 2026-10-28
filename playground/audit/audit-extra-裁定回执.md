@@ -63,3 +63,12 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - 根因（一手）：`RConThreadClient.run()` 的 `try/finally` 在循环体内，`case 3/2` 的 `continue` 会触发 `finally { closeSocket(); }` → `clientSocket = null` → 下一轮首行 NPE。**一条连接只能承载一个包**，`loggedIn` 又是连接级状态 ⇒ 原版 RCON 无法执行命令。
 - 处置：本项目工装停服改走**控制台 stdin**（`run-server.ps1` 在 N 秒后向 `gradlew runServer` 的 stdin 写 `stop`），已验证 `Stopping the server` + `Saving worlds` + BUILD SUCCESSFUL。会话七若需 RCON exec 面，须照主项目做法给 `RConThreadClient` 打 binpatch，并在 `testharness/` 内落补丁说明。
 - 备注：首次冒烟（18:42 轮）因 RCON 不可用而对一个空平铺世界做了强制终止；世界随后删除重建，未留判据缺口。
+
+## 条 8 · 风格对齐主 mod（GLM 手笔）+ 骨架重构（2026-10-28 18:58）
+
+- 收到长期风格约束（双语 javadoc / 批次锚 / `[XxxLog]` 静态类 / Forge Configuration 门面 / exact-class 白名单 / 无防御兜底 / import 分组 / 最小 diff）。
+- 重构面：新增 `ETIMExtraConfig`（`config/etimextra.cfg`，`debug.extraDebugLog` 默认 false，preInit 一次性载入）+ `ETIMExtraLog`（私有构造、静态行方法、`String.format(Locale.ROOT, ...)`、类头行清单）；`ETIMExtra` 类头补中文同译段，`preInit` = `ETIMExtraConfig.init` + `ETIMExtraLog.preInit`，`init` 走 `ETIMExtraLog.boot`。
+- 两行载入判行**不设开关**（理由写进 `ETIMExtraLog` 类头）：可控的 boot 断言会正好藏掉冒烟轮要判的事实；首批内容之后的判行一律挂 `extraDebugLog`。
+- 复验（`testharness/build-logs/09-smoke-latest.log`，52,091 B）：`[ExtraLog] preInit` → `boot ok - side=SERVER etim=1.0.0 etimextra=0.1.0` → `Done (0.709s)!` → `Stopping the server`；`run/config/etimextra.cfg` 生成含 `B:extraDebugLog=false`；Gradle BUILD SUCCESSFUL。
+- **新钉值**：`etimextra-0.1.0.jar` 4,928 B @ 2026-10-28 18:57:41｜SHA-256 `0A0BD8B4360EF0BB245694D70F8C9B3E418CB1D1BDE215DA661C6F116532EFB1`（条 6 的 3,205 B / `28E05FA9…335CC` 退役）。
+- 自检五问：排版 ✓｜注释密度 ✓（新类双语）｜判值锚 ✓（本批无判值，锚 = audit-extra 条 1/6 + D-3）｜判据通道 ✓｜config 门面 ✓。
