@@ -237,3 +237,14 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **D-4 = ②（本批不另开用户面窗）＋状态已前进**：客户端三面已于 2026-10-28 由用户裁定**均正常**（条 18，W-12 ✓）；且自条 15 起客户端面已是 3D 盾（per-item TEISR + `builtin/entity` + 64×64 entity 图集），处理单所述「`item/handheld` + 16×16 占位」静态描述**已被取代**。故 D-4 不登记为「待后续批」而是**已闭**；「实际出什么附魔／附魔名」仍保留为可选转述项。
 - **README 草案**：**保留**——已并入五条工装纪律（含合成臂必须生存、period 口径），随 `98447f3` 提交，tracked dirty 归零。
 - **零落码 / 零 rebuild**：本单只改文档（批文 §4／§5／§2 指针 + 本条）；W-1…W-8 结论与当前钉值均不变。
+
+## 条 20 · 会话七独立复跑核讫（W-13／W-14）+ C-3 配置编码纪律（2026-10-28）
+
+- **回执**：`testharness/reports/extra-shield-craft-rerun-verdict.md`（实测 **10,114 B／116 行**／无 BOM／CR 0／U+FFFD 0，与回执自述逐位相符）。窗口 21:46:11–21:47:57，tag `16-shield-craft-rerun`，执行方会话七。
+- **本会话独立复核（不采信转述）**：直接 grep 窗口产物 `testharness/build-logs/16-shield-craft-rerun.out`——`COMPLETE` **5 行**且五条 `sig` 各自为本金属盾（铜／银／远古／秘银／艾德曼）；本 mod `ERROR|Exception` **0 条**；`run/config/etim.cfg` 回读 **30,629 B／SHA `44E368E5…AE9F2E`／mtime 21:42:28**（无 BOM，首字节 `0x23`），与窗前字节副本逐位同值；`run/config/etimextra.cfg` 的 `extraDebugLog=false`、无 BOM；端口 25565 = 0；git 仅 `??` 本回执。
+- **钉值**：jar **30,259 B／`A223DB6D…44B9A93`／21:32:34**，起收逐位同值，`> Task :jar UP-TO-DATE` ⇒ **0 rebuild**；产品码 commit 仍 `7f6c472`（HEAD 由 `0cde63f` → `207aa42` 为窗内文档提交，产品码 0 改动）。
+- **逐项对照基线 `15-shield-craft`（主会话）**：W-13 五格 `null`／六格 `4262`、W-14 五腿 `−6/+1`、五条 `sig`、`difficulty=150.0 period=102`、`COMPLETE … quality=AVERAGE xp=0`、生命周期、0 rebuild —— **全部同值**；差异只有执行方（复跑目的）与配置写入路径（C-3）。⇒ **复跑通过**，W-13／W-14 由第二执行方独立确认。
+- **冲突**：**A 0 / B 0 / C 3**（C-1 中间态粒配方、C-2 mineflayer 名 unknown、C-3 配置写入编码）——三条均照登，A／B 空。
+- **C-3 处置（新纪律入账）**：窗内用 PowerShell 默认编码读写 `etim.cfg`，给文件加了 BOM 并把注释里的非 ASCII 箭头写成替换字符（30,629→30,672 B）；因键值全 ASCII，窗内解析不受影响，收口用**窗前字节副本整体还原**。新增第 6 条工装纪律：**改配置只用 UTF-8 无 BOM 写入（`[IO.File]::WriteAllText` + `UTF8Encoding($false)`），或直接字节副本还原**——已入 `testharness/README.md`。
+- **本批状态**：五金属盾 = 服务端数值面 + 真实合成面 + 客户端面（用户裁定）**全闭**；唯一可选残留 = 「实际出什么附魔／附魔名」的转述。
+- **零落码 / 零 rebuild**：本条只落文档；钉值与 W-13／W-14 结论不变。

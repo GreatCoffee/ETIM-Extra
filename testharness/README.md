@@ -46,13 +46,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File testharness\server\run-serve
 | `player/extra-shield-run.js` / `extra-shield-enchant.js` | 盾面 W-1…W-7 driver（盾面首批正本窗）；判行解析 + 逐点判定 + 证据 JSON 落 `build-logs/` |
 | `player/extra-shield-craft.js` | 盾面 W-13／W-14 driver（真实合成窗）：开工作台逐格摆锭 → 点结果槽 arm → 等主 mod 计时器 → 读回库存差 + `[CraftingLog]` |
 
-### 五条工装纪律（盾面首批 + 真实合成窗实测，2026-10-28）
+### 六条工装纪律（盾面首批 + 真实合成窗实测，2026-10-28）
 
 1. **假人必须 op**：`/etest hurt <mob-selector>` 走 `EntitySelector.matchOneEntity`，入口 `EntitySelector.java:135` 要求 `sender.canUseCommand(1, "@")`；权限级 0 时解析为空集**且不抛异常**，日志只留 `NO_TARGET`（无 `detail=`）。先写 `run/ops.json`（离线 UUID）或窗内控制台 `op`。
 2. **每臂复位血量**：R196 基座 `capAtLevel0=6`（`PlayerStatLimits.java:29`），不是 1.12 的 20；8 点 raw 减半后 4 点，多臂连打会致死。每臂后 `etest health 6`。
 3. **单只 mob + Tags**：`matchOneEntity` 要求**恰好一个**匹配；每臂先 `kill @e[type=!player]`，再召唤一只带 `Tags:["shx"]` 的（`NoAI:1b,Silent:1b,PersistenceRequired:1b`），选择器用 `@e[type=zombie,tag=shx]`。
 4. **合成臂必须生存**：`ETIMConfig.craftingSkipCreative` 默认 `true`，创造模式会跳过主 mod 的 R196 计时器——只能证明「格子出产物」，证明不了「真实合成消耗」。窗内改 `run/config/etim.cfg` 的 `craftingDebugLog=true`（判 `[CraftingLog]`），收口还原。摆料用「拿整叠 → 右键逐格 → 余料放回」（`putOne` 手法）：逐格过程中结果槽会短暂出现「1 锭→9 粒」的分裂配方，属正常中间态。
 5. **真实合成的时间口径**：`period` 取自 `[CraftingLog] period SET … period=<n>`，等 `n×50 ms + 4 s` 余量；全窗每 10 s `etest food 6 6` 防 `hungerCraftDeny` 把进度冻结（冻结不是清零）。
+6. **改配置只用 UTF-8 无 BOM**：PowerShell 默认编码读写会给 `run/config/*.cfg` 加 BOM、把注释里的非 ASCII 写成替换字符（合成窗实测 30,629→30,672 B）。要么用 `[IO.File]::WriteAllText` + `New-Object Text.UTF8Encoding($false)`，要么开窗前存字节副本、收口整体还原并回读 SHA。**不得**用 `Set-Content` / `Out-File` 改配置文件。
 
 ### 附魔面日志判据（替代附魔台 GUI）
 
