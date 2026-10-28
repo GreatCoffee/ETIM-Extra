@@ -87,3 +87,29 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **角色表（v2）**：会话零 = 环境搭建；会话一 = MITE 竞品实现调研（仅参考）；会话二 = MITE 玩家侧资料（仅参考，**不进判决链**）；会话三 = Forge 生态轮子调研（仅参考）；会话四 = 判值总表建设；会话五 = 终审；**会话六 = R196 一手（唯一来源）+ 摸底/对照报告**；会话七 = 自动化测试；会话八 = 纯文书；会话九 = 无状态机械核计。
 - **条 9 勘误**：条 9 与立项摸底任务书旧版把「R196 一手检索/立项摸底」指派给会话二，属**错投**（会话二只做 MITE wiki 类资料，不进判决链）。现改为会话六（同 DeepSeek 档）；任务书文件已就地改投，此前若已转发给会话二的版本作废。
 - 条 9 其余自陈（越位推导、转引标注、mavenLocal 手工件）不受影响，仍然有效。
+
+## 条 11 · 盾面立项摸底核讫 + T-1…T-5 裁定 + 派生值登记（2026-10-28，ETIM-Extra 主会话）
+
+- **核讫对象**：`playground/audit/extra-shield-立项摸底.md`（50,087 B / 473 行 / 首字节 `0x23` / CR 0 / U+FFFD 0，与会话六回执逐位相符）。
+- **锚点机械核**（本轮独立复跑，只核存在性与引文，不复算判值）：报告内 `X.java:NN` 锚 **137 处 / 111 个不同**——文件存在 137/137、行号越界 **0**；抽查 7 处引文与源逐字比对：`ItemTool.java:36-42`（`4.0F × components × durability × 100.0F`）、`:54-56`（`canBlock()` 真）、`ItemArmor.java:36-43`（非锁甲 ×2）、`:45-74`（甲点表）、`Damage.java:197-210`（半减 → 1.0 地板 → 仅 `instanceof ItemTool` 磨损）、`EntityPlayer.java:205-206`（单手持槽）、`EnumEquipmentMaterial.java:12-15`（iron 8.0/30/masterwork；ancient 16.0/40；mithril 64.0/100/legendary；adamantium 256.0/40/legendary）——**全部一致**。
+- **接受 A-1 阻断结论**：R196 无盾（10 条负证，与游戏内容相关命中 0）。本条起 D-3（条 2）状态由「无源待裁」改为「**无一手盾行 ⇒ 派生登记**」，派生依据与算式见下；条 3 的 S1~S4 草案仍不作判值。
+- **接受勘误 E-1**：任务书 B-3 的「甲点 `:49-50`」实为 rusted_iron 分支，甲点表在 `:45-74`；判值不变（9/10）。
+- **T 裁定**（本会话裁，会话六据此出对照报告，不得改判）：
+
+| 位 | 裁定 | 一手依据 / 主 mod 落点 | 结果 |
+|---|---|---|---|
+| **T-1 耐久** | 采 ① 工具系算式，`components = 1`，落地为常量（配置默认值） | `ItemTool.java:36-42` 算式；`EnumEquipmentMaterial.java:14-15` 材料行；`components=1` 取 R196 现成值（`ItemShovel:26`／`ItemCudgel:32`／`ItemFlintAndSteel:14`） | mithril **25,600**｜adamantium **102,400** |
+| **T-2 磨损** | 采 ① 主 mod `ETIMConfig.shieldWearRate`（默认 1.0） | 主 mod `combat/ETIMBlocking.java:140-155`（`(int)(blocked × rate)`） | 本项目**零磨损代码**；不加第二套 rate |
+| **T-3 配方** | 采 ① 材料列形：shaped `"X X"/"XXX"/" X "`，X = 该金属锭（**6 锭**） | 主 mod `metal/ETIMGear.java:193-233`（同款 `addShaped`）；6 锭落在甲位区间（靴 4／盔 5／腿 7／胸 8） | 每金属一行配方 |
+| **T-4 附魔/品质** | 附魔度照材料行（mithril 100／adamantium 40）走 `getItemEnchantability()`；**不接品质**；**不补白名单** | 主 mod `metal/ETIMItemAxe.java:64-65` 同写法；品质载体 = 6 个 exact class（`quality/ETIMQuality.java` 类头）；1.12.2 默认门对任何可损坏物品给 Unbreaking（`EnchantmentDurability.java:43-46`）+ Mending（`EnumEnchantmentType.BREAKABLE`） | 盾可附 Unbreaking/Mending；耐久不吃品质乘算 |
+| **T-5 格挡** | 采 ② `isShield` 门（主 mod 已收口） | `Item.java:1298-1300`：默认实现是 `stack.getItem() == Items.SHIELD` **身份比较** ⇒ 必须覆写返回 true；主 mod `ETIMBlocking.java:99-105` | 不继承 `ItemTool`、不覆写 `canBlock()`、不加 BLOCK/decay 工具语义 |
+
+- **派生值登记（算式明列，非一手盾值）**：`4.0F × 1 × 64.0F × 100.0F = 25,600`（秘银）；`4.0F × 1 × 256.0F × 100.0F = 102,400`（艾德曼）。**拒 ② 护甲系**：`1 × d × 2` → 128／512，低于主 mod 铁剑 6,400、秘银剑 51,200（`ETIMItemSword` ctor 同式），同材料做盾反比剑脆约 40 倍，违背条 2 c 档「顶级材料盾必须相对放大耐久」的口径。**拒 ③ 裸写常量**：与 ① 数值相同时 ① 可复算，③ 不可复算。
+- **物品实现面裁定（对照报告须逐面给 1.12.2 `path:line`）**：
+  - 类 = `ETIMExtraItemShield extends net.minecraft.item.Item`；**不继承 `ItemShield`**（其 ctor 绑 336 耐久、`getItemStackDisplayName` 绑 banner 名、`getIsRepairable` 绑木板、且 `TileEntityItemStackRenderer` 只认 `item == Items.SHIELD` 身份 `:62`，继承拿不到 3D 盾模型却白带 banner 语义）。
+  - 方法面 8 条：`setMaxStackSize(1)` / `setMaxDamage(<派生值>)` / `isShield → true` / `getItemUseAction → EnumAction.BLOCK` / `getMaxItemUseDuration → 72000` / `onItemRightClick → setActiveHand` / `getItemEnchantability → 材料行` / `addPropertyOverride("blocking")`。
+  - 注册名：`etimextra:mithril_shield`、`etimextra:adamantium_shield`；lang：`item.etimextra.mithril_shield.name` = 秘银盾、`…adamantium_shield.name` = 艾德曼盾。
+  - 渲染：首批用标准物品模型（`item/handheld`），**3D 盾模型（custom TEISR + `ModelShield`）不进首批**；客户端面判据由用户肉眼。
+  - 配置：`ETIMExtraConfig` 加 `shield.mithrilDurability=25600` / `shield.adamantiumDurability=102400` 两键。**配置原则**：无一手来源的派生值可配（耐久）；有一手来源的判值不配（附魔度 100/40、配方 6 锭）。
+- **日志面**：`[ExtraLog]` 新增盾面注册行（`name / maxDamage / enchantability`）与配方行（`shield recipe registered …`）；格挡与磨损判行属主 mod `[BlockLog]`（只读引用，不在本项目造第二通道）。
+- **零落码**：本条为裁定，未动 `src/`；本轮新增文件 = 本条目 + `extra-shield-对照报告-任务书.md`。

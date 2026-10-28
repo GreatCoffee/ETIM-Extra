@@ -28,6 +28,9 @@ run
 build-logs/
 testharness/build-logs/
 
+# reproducible javap volumes (one-line command per class in the audit report §9.1)
+playground/audit/*-javap/
+
 # runtime backups & raw logs
 testharness/playerdata-backup/
 testharness/reports/*.log
