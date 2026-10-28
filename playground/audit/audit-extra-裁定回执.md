@@ -162,3 +162,17 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 
 - **本批结论**：秘银盾 / 艾德曼盾 服务端面**闭单**（物品注册、派生耐久、6 锭配方、isShield 格挡链、半减、地板、磨损、附魔门、品质不接 全部有可 grep 行）。唯一遗留 = 客户端观感面（图标/手持模型/显示名/右键姿态/tooltip），由用户肉眼确认，非判据、不阻塞。
 - **遗留项登记**：客户端观感（未做，用户随时可做）；3D 盾模型 / TEISR / Mending 白名单 / 禁用 vanilla 盾 / 盾的品质档——**仍不在范围**（批文 §6）。
+
+## 条 15 · 盾面观感批（3D 模型 + 举盾姿态）+ 用户遮挡口径（2026-10-28）
+
+- **触发**：用户首轮肉眼判（客户端 `13-client` 轮之前的构建）：**图标太糊、名字正确、没有举盾姿态**。
+- **姿态缺失的诊断**（一手行）：① vanilla 1.12 第一人称 `case BLOCK` 与 `case NONE` 调同一个 `transformSideFirstPerson`（`client/renderer/ItemRenderer.java:392-402`）⇒ 纯物品 + `EnumAction.BLOCK` **零可见姿态**；② 主 mod 的姿态 mixin 门是 `isBlockCarrier`（`mixins/MixinItemRendererBlockPose.java:46`，注释明写「不含盾」）⇒ 盾拿不到工具那套补偿。结论：不是漏写，是两条路都不覆盖盾。
+- **处置（本会话落码）**：
+  - 新增 `client/ETIMExtraShieldRenderer`（per-item TEISR）：vanilla `ModelShield` 几何 + 本 mod 纹理，体例照 `TileEntityItemStackRenderer:62-76` 的盾臂；
+  - 模型 JSON 改 `builtin/entity`，**display 变换直接采 vanilla 盾的数值**（`assets/minecraft/models/item/shield.json` 与 `shield_blocking.json`），运行时按 `blocking` 谓词切到 `*_shield_blocking` ⇒ 举盾姿态 = 原版举盾位姿，非自估；
+  - 纹理改 64×64 entity 图集（以 vanilla `shield_base.png` 重着色：秘银冷银蓝／艾德曼暗钢绿），弃用原 16×16 占位 item 图（已删）。
+  - 零机制改动：仍无 mixin、无事件注册、无新通道；TEISR 只挂客户端类。
+- **观测结果**：用户确认「一切正常」（图标清晰、名字正确、右键有举盾姿态）。
+- **用户口径（仅记录，不做任何干预）**：**举盾会遮挡相当大一块屏幕，这是 Minecraft 1.12 的机制；该遮挡可由资源包调整，属原版用户层操作，本项目不干预**。
+- **范围变更登记**：3D 盾模型／TEISR 由「本批不做」（批文 §6）转为**已做**（由用户观测需求触发）；Mending 白名单／禁用 vanilla 盾／盾的品质档**仍未做**。
+- **新钉值**：`build/libs/etimextra-0.1.0.jar` **20,680 B** @ 2026-10-28 21:20:41｜SHA-256 `9FFE0D2720F998B355BA3453542059D2BEA26D1405113BCA2BFDD7F725C1A796`（前钉 14,170 B／`470809B0…` 作废）。

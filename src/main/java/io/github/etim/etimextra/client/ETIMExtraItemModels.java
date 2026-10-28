@@ -13,29 +13,27 @@ import io.github.etim.etimextra.ETIMExtra;
 import io.github.etim.etimextra.shield.ETIMExtraContent;
 
 /**
- * Client model face for the two shields: one {@code inventory} variant per item,
- * meta 0 (neither shield carries subtypes). Without this row the item is a
- * purple-black missing model — Forge 1.12's {@code ModelLoader} only meshes the
- * {@code customModels} table, and nothing else names these items
- * (the main mod hit the same wall, {@code client/ETIMItemModels}).
+ * Client face of the two shields: the {@code inventory} model variant plus the
+ * per-item 3D renderer. The model JSONs are {@code builtin/entity}, so without
+ * the renderer the item would draw nothing; without the model location the item
+ * would be a purple-black missing model.
  *
  * <p>Dual write, the main mod's proven shape: the mesh-definition function plus
  * the static {@code (item, meta)} table.</p>
  *
- * <p>盾的物品模型面：每件一个 {@code inventory} 变体、meta 0。不写这一面，物品就是
- * 紫黑缺失模型——Forge 1.12 的 {@code ModelLoader} 只认 {@code customModels} 表。
- * 双写（mesh 函数 + 静态表）照主 mod 的已验证形制。</p>
+ * <p>盾的客户端面：{@code inventory} 模型变体 + per-item 3D 渲染器。模型 JSON 是
+ * {@code builtin/entity}，没有渲染器就什么也不画；没有模型位置就是紫黑缺失模型。</p>
  */
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = ETIMExtra.MOD_ID)
 public final class ETIMExtraItemModels {
 
     @SubscribeEvent
     public static void onModelRegistry(ModelRegistryEvent event) {
-        register(ETIMExtraContent.mithrilShield);
-        register(ETIMExtraContent.adamantiumShield);
+        register(ETIMExtraContent.mithrilShield, "mithril_shield");
+        register(ETIMExtraContent.adamantiumShield, "adamantium_shield");
     }
 
-    private static void register(Item item) {
+    private static void register(Item item, String textureName) {
         if (item == null) {
             return;
         }
@@ -45,6 +43,9 @@ public final class ETIMExtraItemModels {
         }
         ModelLoader.setCustomMeshDefinition(item, stack -> new ModelResourceLocation(name, "inventory"));
         ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(name, "inventory"));
+        // builtin/entity ⇒ the geometry comes from this renderer, not from JSON elements.
+        item.setTileEntityItemStackRenderer(new ETIMExtraShieldRenderer(
+                new ResourceLocation(ETIMExtra.MOD_ID, "textures/entity/" + textureName + ".png")));
     }
 
     private ETIMExtraItemModels() {
