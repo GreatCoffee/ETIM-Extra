@@ -33,6 +33,32 @@ public final class ETIMExtraConfig {
 
     // shield ------------------------------------------------------
     /**
+     * 铜盾耐久（<b>派生值</b>：{@code 4.0F × 1 × 4.0F × 100.0F} — R196
+     * {@code ItemTool.java:36-42} 算式 + 主 mod 材料行 {@code ETIMMetals.COPPER}
+     * （{@code ETIMMetals.java:37}），{@code components=1} 由裁定 T-1 定）。R196
+     * 无盾（立项摸底 A-1），故它不是一手盾值；玩家可感知，故可配。
+     *
+     * <p>Copper shield max damage — DERIVED, not an R196 shield value.</p>
+     */
+    public static int shieldCopperDurability = 1600;
+
+    /**
+     * 银盾耐久（<b>派生值</b>：{@code 4.0F × 1 × 4.0F × 100.0F} — 同上，
+     * {@code ETIMMetals.java:38}）。性质同铜盾。
+     *
+     * <p>Silver shield max damage — DERIVED, not an R196 shield value.</p>
+     */
+    public static int shieldSilverDurability = 1600;
+
+    /**
+     * 远古金属盾耐久（<b>派生值</b>：{@code 4.0F × 1 × 16.0F × 100.0F} — 同上，
+     * {@code ETIMMetals.java:39}）。性质同铜盾。
+     *
+     * <p>Ancient metal shield max damage — DERIVED, not an R196 shield value.</p>
+     */
+    public static int shieldAncientMetalDurability = 6400;
+
+    /**
      * 秘银盾耐久（<b>派生值</b>：{@code 4.0F × 1 × 64.0F × 100.0F} — R196
      * {@code ItemTool.java:36-42} + {@code EnumEquipmentMaterial.java:14}，
      * {@code components=1} 由裁定 T-1 定）。R196 无盾（立项摸底 A-1），故它不是
@@ -61,6 +87,17 @@ public final class ETIMExtraConfig {
         extraDebugLog = config.getBoolean("extraDebugLog", "debug", extraDebugLog,
                 "Dev judgement channel [ExtraLog] for the shield rows (off = rows return"
                         + " immediately, zero effect on values)");
+        shieldCopperDurability = config.getInt("copperDurability", "shield", shieldCopperDurability, 1, 1 << 20,
+                "Copper shield max damage; DERIVED = 4.0 x 1 x 4.0 x 100 (R196 ItemTool.java:36-42"
+                        + " + ETIMMetals.COPPER, ETIMMetals.java:37; components=1 by ruling T-1)."
+                        + " NOT an R196 shield value");
+        shieldSilverDurability = config.getInt("silverDurability", "shield", shieldSilverDurability, 1, 1 << 20,
+                "Silver shield max damage; DERIVED = 4.0 x 1 x 4.0 x 100 (ETIMMetals.java:38)."
+                        + " NOT an R196 shield value");
+        shieldAncientMetalDurability = config.getInt("ancientMetalDurability", "shield",
+                shieldAncientMetalDurability, 1, 1 << 20,
+                "Ancient metal shield max damage; DERIVED = 4.0 x 1 x 16.0 x 100 (ETIMMetals.java:39)."
+                        + " NOT an R196 shield value");
         shieldMithrilDurability = config.getInt("mithrilDurability", "shield", shieldMithrilDurability, 1, 1 << 20,
                 "Mithril shield max damage; DERIVED = 4.0 x 1 x 64.0 x 100 (R196 ItemTool.java:36-42"
                         + " + EnumEquipmentMaterial.java:14; components=1 by ruling T-1)."

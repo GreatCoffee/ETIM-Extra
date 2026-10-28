@@ -17,12 +17,13 @@ import net.minecraft.world.World;
 import io.github.etim.etim.metal.ETIMMetals;
 
 /**
- * The shield <em>item</em> face of the mithril / adamantium batch. The class
- * states exactly two facts — "I am a shield" ({@link #isShield}) and "I can
- * enter the BLOCK use state" ({@link #getItemUseAction} /
- * {@link #getMaxItemUseDuration} / {@link #onItemRightClick}) — and nothing
- * else: the halving, the 1.0 floor and the {@code (int)(blocked × rate)} wear
- * all belong to the main mod (AD-10+SH, {@code combat/ETIMBlocking}).
+ * The shield <em>item</em> face of the metal shield batch (copper / silver /
+ * ancient metal / mithril / adamantium). The class states exactly two facts —
+ * "I am a shield" ({@link #isShield}) and "I can enter the BLOCK use state"
+ * ({@link #getItemUseAction} / {@link #getMaxItemUseDuration} /
+ * {@link #onItemRightClick}) — and nothing else: the halving, the 1.0 floor and
+ * the {@code (int)(blocked × rate)} wear all belong to the main mod (AD-10+SH,
+ * {@code combat/ETIMBlocking}).
  *
  * <p>Deliberately <b>not</b> an {@code ItemTool} and <b>not</b>
  * {@code ItemShield} (对照报告 L-3, 六条负担): {@code ItemShield} pins 336

@@ -63,12 +63,16 @@ public final class ETIMExtraLog {
                 + " maxDamage=" + maxDamage + " enchantability=" + enchantability + " stack=" + stack);
     }
 
-    /** W-2 recipe row: one line per shaped recipe, with the six-ingot count. W-2 配方行：一条配方一行，带 6 锭计数。 */
-    public static void shieldRecipe(String name, String ingot, int count) {
+    /** W-2 recipe row: one line per shaped recipe, read back off the registered
+     *  recipe — the ingredient item, the non-empty slot count (must be the six
+     *  ingots of T-3) and the output. W-2 配方行：一条配方一行，从已注册配方反读
+     *  ——材料物品、非空格数（必须是 T-3 的 6 锭）与产物。 */
+    public static void shieldRecipe(String name, String ingot, int count, String output) {
         if (!ETIMExtraConfig.extraDebugLog) {
             return;
         }
-        row("shield recipe=" + ETIMExtra.MOD_ID + ":" + name + " ingot=" + ingot + " count=" + count);
+        row("shield recipe=" + ETIMExtra.MOD_ID + ":" + name + " ingot=" + ingot + " count=" + count
+                + " output=" + output);
     }
 
     /** W-2 companion: the recipe count actually present in the vanilla registry.

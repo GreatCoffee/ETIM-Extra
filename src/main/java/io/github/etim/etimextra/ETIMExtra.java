@@ -13,7 +13,8 @@ import io.github.etim.etimextra.shield.ETIMExtraContent;
 /**
  * The {@code @Mod} entry of ETIM-Extra, the add-on of
  * <a href="https://github.com/GreatCoffee/ETIM">Easy Times In Minecraft (etim)</a>
- * that ships the mithril and adamantium shields.
+ * that ships the metal shields — copper / silver / ancient metal / mithril /
+ * adamantium, one shield per ingot-bearing R196 material.
  *
  * <p>Scope of the add-on: the main mod owns the shield <em>mechanism</em>
  * (AD-10+SH: 1.12's full-free shield segment is closed and every
