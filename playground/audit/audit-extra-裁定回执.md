@@ -266,3 +266,14 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **判读**：与机制逐条相符——附魔台对该类物品只出 Unbreaking（Mending 是宝藏附魔，只能附魔书 + 铁砧；B-1 已知后果、裁 T-4 不补白名单）；观察时 `/xp 100L` 把三档 power 抬得很高，秘银（附魔度 100）三档全部越过 Unbreaking III 门槛 ⇒ 三档都顶到 III；铜（30）⇒ I／I／II，随附魔度下降而降低。这正是「附魔度既是硬门也是强度」的可见后果，非缺陷。
 - **结论**：第二小项（实际出什么附魔名）**已观察、无需改码**；第一小项（三件新盾逐一受击，条 21）**已验**。用户指令「验证第一大项的两个小项」**两项闭环**。
 - **零落码 / 零 rebuild**：钉值不变——jar **30,259 B／`A223DB6D…44B9A93`／21:32:34**、产品码 `7f6c472`。
+
+## 条 23 · 主 mod 侧三项收口回执核讫 · 交接闭单（2026-10-28）
+
+- **回执**：用户转述「主 mod 收口三项均已落，账本条 114 + README 一行索引以 commit `7a26c6f` 定格」。本会话**逐项直核，不采信转述**。
+- **① 主账本挂条**：`D:\OpenCodeWorkspace\Easy Times In Minecraft\playground\audit\audit20-裁定回执.md` 第 **2468 行**确为 `| 114 | 跨项目/组织 | ETIM-Extra 五金属盾批次闭单登记 |`，内容含三批闭单（W-1…W-8 ／ 3D 面 ／ W-9…W-15 + 会话七复跑）、零派修、双账规则未触发；钉值 **30,259 B｜`A223DB6D…44B9A93`｜21:32:34｜`7f6c472`｜0 rebuild** 与本账本**逐位相同**。该文件在 workspace 层（`D:\OpenCodeWorkspace\Easy Times In Minecraft\playground\`），**不在任何 git 仓库内**（`git -C "D:\…\Easy Times In Minecraft" rev-parse` = not a git repository），故本条为文件事实，无 commit 可指。
+- **② 工装归属**：主 mod 仓库 HEAD = **`7a26c6f`**（`docs: testharness batch assets … + one-line index to ETIM-Extra shield verdicts`，**57 件**：`testharness/README.md` + ad7e/ad10s/uw2 系 runner + pose + 两份 stop 脚本）；`testharness/README.md` §7「跨项目附属索引（2026-10-28，ETIM-Extra 五金属盾批交接）」已落一行索引，指向五份 `extra-shield-*-verdict.md` 与本账本**条 1–22**，并明示「本侧不重复落索引」；主仓库 **tracked dirty = 0**。
+- **③ 依赖运营口径**：条 114 记入三条互操作约定——改 `ETIMBlocking` 减半／地板／磨损**前须通知 ETIM-Extra**；改 `ETIMMetals` 的 `durabilityFactor`／`enchantability`**即改附属数值、须同步重钉**；主 mod 每次重建／改版本须跑 `gradlew publishToMavenLocal`（真任务 `publishEtimLocalPublicationToMavenLocal`，主账本条 112／commit `857fe31` 在案，含 reobf 762,605 B ／ dev 746,954 B ／ sources 683,689 B）。本附属**接受该口径为双向运营约定**。
+- **D-2 口径互认**：条 114 亦记「附属判据 `etest hurt` 非 op 静默 NO_TARGET（`EntitySelector.java:135` 权限门 + `TestDriver.java:165`）裁定 **D-2 = ①** 只记工装纪律、不升 B 级」，与本账本条 17 一致，**两侧同口径、零派修**。
+- **索引范围说明**：README §7 写「条 1–22」是指**盾批闭单范围**；本条 23 为盾批之后的跨项目收口登记，不改变该范围，**不请求主 mod 再改 README**。
+- **交接闭单**：`playground/audit/extra-主会话-交接提示词.md`（commit `46c0a7c`）三项请求 **全部有落点**，本会话**无待回事项**。
+- **零落码 / 零 rebuild**：jar **30,259 B／`A223DB6D…44B9A93`／21:32:34**、产品码 `7f6c472`，起收同值；本条只落文档。
