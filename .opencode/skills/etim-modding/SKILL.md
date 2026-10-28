@@ -5,6 +5,8 @@ description: ETIM-Extra（附属 mod）开发专家，精通Minecraft 1.12.2 For
 
 # ETIM Mod开发指南
 
+> 快照来源：主 mod 项目 `.opencode/skills/etim-modding/SKILL.md`（11,415 B，2026-10-28 抄录；主项目后续更新不自动同步，diff 以此为基线）。
+
 ## 项目背景
 ETIM是基于MITE（Minecraft Is Too Easy）机制的Minecraft 1.12.2 Forge Mod，Mod ID为`etim`。项目从零仿制MITE的核心机制，不实现原版反作弊功能，不强制不兼容其他Mod。
 
@@ -21,7 +23,7 @@ ETIM是基于MITE（Minecraft Is Too Easy）机制的Minecraft 1.12.2 Forge Mod�
 - ICPM（github mcnb-Flash/I-can-t-play-MITE）属他人作品，只许机制/数值交叉印证，代码与文本不得照抄。
 
 ## 判据纪律（硬约束）
-- 判定以日志为据：`[FoodLog]`/`[TestLog]`/`[EtimTest]`/`[SleepLog]`/`[IngestLog]` 等通道；客户端 HUD 仅开发参考，不作判定依据。
+- 判定以日志为据：本项目 `[ExtraLog]`（载入/盾面判行），主 mod `[FoodLog]`/`[TestLog]`/`[EtimTest]`/`[SleepLog]`/`[IngestLog]` 等通道；客户端 HUD 仅开发参考，不作判定依据。
 - `foodTestMode` 必须 = false（验证窗与产品判定时）。
 - 判决报告一律 UTF-8（0 U+FFFD，判据符 ✓/✗）；机械复核只信字节：字节数、首字节、U+FFFD 计数、✓/✗ 计数。叙述段的语义标记（如缺口 ✗）与核讫表判负要分开口径，表面差异先对掉再定性。
 - 判据文字口径已入账：<判点锚-1> `[FoodLog]` base = 每事件充账量（判速率用 Σamount÷Σ米数）；<判点锚-2> 行内路径含服务端自身 tick 位移（`NetHandlerPlayServer:411/:589` + `travel:1989` 两调用点同源，双计按容差判读）；<判点锚-3> boatDrain base ±2% 容差。
@@ -38,7 +40,7 @@ ETIM是基于MITE（Minecraft Is Too Easy）机制的Minecraft 1.12.2 Forge Mod�
 - **漏斗**：`ETIMEndurance.charge()` 四门 = `world.isRemote` / `!foodModel` / `isCreativeMode` / `disableDamage`（<判点锚>，镜像 R196 :1875/:1881）+ hungerPoolCap 40 clamp + `[FoodLog]` 分解行。
 - **十支**：dig/attack/place/hoe/bow 带 `getEnduranceModifier`；移动系全裸充 mod=1.0——五支（dive 3D / swim 2D 共率 0.015、ladder 上升 dy/10、walk 0.01、sprint 0.05，`MixinEntityPlayer` TAIL → `chargeMovement` 复刻 vanilla 分支序）+ boat（α 钩子 `MixinNetHandlerPlayServer` processInput TAIL，×|moveForward|）+ waterJump（C03 dy>0 && isInWater()||isInLava() 位移代理，chargeMovement 平行面）。
 - 服务端 moveForward/isJumping 唯一喂入 = C0C（`processInput:318`，setEntityActionState 全树唯一调用点）；C0C 仅骑乘发送——水中跳意图面在非骑乘恒不可测（终审 <判点锚-a>=C），位移代理漂移按 <判点锚-b> 判读。
-- 玩家可感知数值与开关必须进 `ETIMConfig`（food 节），不预防性抽象内部实现。
+- 玩家可感知数值与开关必须进本项目 `ETIMExtraConfig`（主 mod 为 `ETIMConfig`），不预防性抽象内部实现。
 
 ## 构建与验证
 - 编译（workdir = 本项目根 `D:\OpenCodeWorkspace\ETIM-Extra`，长输出落盘只看尾部）：

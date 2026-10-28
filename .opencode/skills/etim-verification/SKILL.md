@@ -5,6 +5,8 @@ description: ETIM-Extra 验证窗执行与判决回执专家：钉值基线、W 
 
 # ETIM 验证窗执行指南
 
+> 快照来源：主 mod 项目 `.opencode/skills/etim-verification/SKILL.md`（14,104 B，2026-10-28 抄录；主项目后续更新不自动同步，diff 以此为基线）。
+
 面向「验证窗执行方」（会话七）与任何要落判决回执的实测任务。核心不是「测了没」，而是**每个判点都能落到一行可 grep 的日志，且报告字节可复核**。
 
 ## 0. 角色与边界
@@ -33,6 +35,7 @@ description: ETIM-Extra 验证窗执行与判决回执专家：钉值基线、W 
 
 | 通道 | 判什么 | 典型行 |
 |---|---|---|
+| `[ExtraLog]` | 本项目载入/盾面判行（独立于主 mod 通道） | `preInit`、`boot ok - side=… etim=… etimextra=…` |
 | `[TestLog]` | boot/注册/客户端模型面 | `item model registry: 164 etim items`、`Done (1.214s)` |
 | `[EtimTest]` | dev 命令回执 | `/etest` 各子命令 |
 | `[AILog]` | 消散/召唤/狂化/属性 | `mob despawn kill counter=…`、`bonelord summon … num=` |
@@ -44,7 +47,7 @@ description: ETIM-Extra 验证窗执行与判决回执专家：钉值基线、W 
 | `[DeathLog]` / `[SleepLog]` / `[WeatherLog]` / `[OreLog]` | 死亡链/床/天气/矿物 | 见各批批文 |
 | `[client]` / `[server]` 尾标 | **尾标本身不可当判据**：由线程名推断，RCON 线程会被标成 `[client]`；判值看行内字段 | — |
 
-> 通道由 `ETIMConfig` 开关控制（dev channel）。非本批判点的通道开窗前关掉，避免淹日志（`frenzy set` 可 15 行/秒、`density-eval` 每 tick 一行）。
+> 通道由主 mod `ETIMConfig` / 本项目 `ETIMExtraConfig` 的 dev 开关控制；`[ExtraLog]` 的两行载入判行不设开关（见 `ETIMExtraLog` 类头），后续盾面判行挂 `extraDebugLog`。非本批判点的通道开窗前关掉，避免淹日志（`frenzy set` 可 15 行/秒、`density-eval` 每 tick 一行）。
 
 ## 3. 开窗前：判点表
 
@@ -127,6 +130,8 @@ Minecraft 1.12 的 RCON 发送者**没有实体位置**，凡以发送者位置�
 6. 客户端面（tooltip/模型/渲染）：用户操作 + 原文转述；日志侧只做辅助（`item model registry` 行、缺失纹理噪声计数）。
 
 ## 7. 收口
+
+> **ETIM-Extra 停服口径（B-EXTRA-2，账本条 7）**：原版 1.12.2 RCON 一条连接只能承载一个包（auth 应答后即断连），`save-all` / `stop` 走 RCON 必失败。本项目用 `testharness/server/run-server.ps1`——起服时把 `stop` 写进服务端 stdin，判据是 `Stopping the server` / `Saving worlds` / 端口归零。下面的 RCON 段是主 mod 项目的链，只作对照。
 
 ```powershell
 # 1) 快照证据（先于停服，避免文件占用）
