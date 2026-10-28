@@ -285,3 +285,14 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **出具**：`playground/audit/extra-shield-金属覆盖-进度报告.md`（覆盖矩阵 + 五盾数值面 + 证据链 + 七条边界 + 钉值）。
 - **唯一待回条件**：若主会话所指「其余金属」是 `ETIMMetals` 六行**之外**的材料（其他 mod 金属／新计划金属），须给出材料清单与判值来源，附属按新批立项；否则**无动作**，不重复立同名批次。
 - **零落码 / 零 rebuild**：钉值不变——jar **30,259 B／`A223DB6D…44B9A93`／21:32:34**、产品码 `7f6c472`。
+
+## 条 25 · 会话八 README 双文交付核讫 + 4 处订正（2026-10-28）
+
+- **回执**：会话八交出 `README.md` 11,300 B／154 行；本会话实测（订正前）**bytes=11,300／first=0x23／CR=0／U+FFFD=0／trailingWS=0**，与回执逐位相符。11 节齐、五件红名单齐、派生标注中英各一处 ✓。
+- **订正 1（事实错误，责任在主会话）**：README 双处写 **Forge 14.23.5.2860**——旧 README 即错，**我的任务书照抄未核**。实测运行日志 `forge@14.23.5.2847`（`18-client-enchant.out`、`17-shield-family-hit.out`、`16-shield-craft-rerun.out` 一致）→ 双处改为 **14.23.5.2847**；任务书顶部加订正行，正文不改写。
+- **订正 2（英文误译）**：锈铁行 `the same crop as the main mod's rusted gear, loot-chain armour only` → `the same treatment as the main mod's rusted gear, loot-only chain armour`（crop 是「口径」的误译）。
+- **订正 3（自相矛盾）**：§4 原写「附魔度…不在本仓库复制数字」，但 §2 表已列 30/30/40/100/40 → 改为「表中数字是该列的展示值，代码不复制常量」（中英同步）。
+- **订正 4（术语与可读性）**：英文段混入「会话七」→ `session 7`；§1 补 R196 双语释义「本项目对照的参考反编译版本」；§4 因子归属改为「取自主 mod 的 `ETIMMetals`（`:37-41`，对应 R196 材料行耐久列）」。
+- **订正后字节**：**11,613 B／154 行／first 0x23／CR 0／U+FFFD 0／trailingWS 0**；`2860`、`crop`、`not copied` 三个旧串在 README 内均 **0 命中**。
+- **待裁 2 项（未动）**：① `gradle.properties:25` 的 `mod_description` 仍为 “mithril and adamantium shields”，模组列表页同受影响——该文件 ASCII 安全，但改动会改 jar（`mcmod.info`）⇒ 必须重建 + 重钉，故等用户裁决；② `ETIMExtra.java:30` 中文 javadoc 仍写「承载秘银盾与艾德曼盾」——注释改动预计不改字节码，但需重建确认，一并等裁决。
+- **零落码 / 零 rebuild**：jar **30,259 B／`A223DB6D…44B9A93`／21:32:34** 未动；本次只改 README、任务书订正行与本条账本。

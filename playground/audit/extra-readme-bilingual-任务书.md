@@ -1,5 +1,7 @@
 # 【任务书 · 会话八】ETIM-Extra README 中英双文重写
 
+> **【订正 2026-10-28】** 本任务书 §四第 1 行的 Forge 版本 **14.23.5.2860 是错的**（照抄旧 README 未核）；实测运行日志为 **14.23.5.2847**（`testharness/build-logs/18-client-enchant.out`、`17-shield-family-hit.out` 等，`forge@14.23.5.2847`）。README 已按实测改正。历史任务书正文保留原样，不改写。
+
 ## 一、抬头
 
 - **出借方**：ETIM-Extra 主会话（仓库 `D:\OpenCodeWorkspace\ETIM-Extra`）
