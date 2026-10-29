@@ -452,3 +452,22 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
   - `probe` config 臂：`probe player=<n> cfg blockModel=… factor=0.500 min=1.000 shieldRateBase=2.500 woodReduction=0.500`
   - 要点：`factor` = 保留系数（1−r）；`rate` = 有效总率（2.5×mult）；盾行 `decay=na`、工具行 `rate=na mult=na`；**全文无 `curve=`**。
 - **钉值**：jar **30,285 B／`7D3F04F1…D4EE4D`／mtime 2026-10-28 22:28:28**／`c66c099` **未动**，0 rebuild。阻塞 0；等待项 = 正式派修 + `ETIMShield`／`ETIMGhost` 同批 mavenLocal + 接口 jar 钉值。
+
+## 条 34 · 会话六第 4 轮（终审 B/C 勘误）：授权提交 `bd40197` + 会话五终审「放行」核讫 + 1 项 C 级残留（2026-10-29）
+
+- **来源**：会话六「`4dff3b9` 核讫 + 发现会话五终审已出（放行）+ 第 4 轮勘误已做（未 commit）」，用户中转；请求按给定命令只 add 两件提交。
+- **终审回执（会话五产出，untracked）**：`盾面削弱批-终审回执.md` **18,976 B／93 行**／SHA-256 `C2654D552F8A251DD61808526C8A224A8BCFFA22DED3D3782D5E6A45355CA79D`；判 **T-1…T-5 ✓、T-6 ✗ → B-审3**；**A 0／B 4／C 4**；结论「**放行**，不阻塞派修」。本会话只读，未改、未 add、未 commit；该件仍为 `??`，归会话五／主会话收口。
+- **授权与提交（本会话执行）**：逐路径 `git add --`（未 `-A`）→ commit **`bd40197`**（parent `be24d6c`，message 与请求逐字一致）→ 推送 `be24d6c..bd40197`；`git show --stat` **2 路径、42+/12−**（= 报告 41+/11− + 摸底 1+/1−）；提交瞬间唯一其它改动是 `?? 终审回执`，**未入提交**；主 mod 树未触。
+- **两件机械核（与其自报逐位相同）**：摸底 **69,721 B**／**637 行**／SHA-256 `12213F2A7555FCD4FC48E05CBB6F711FCBB0D857A4AC45FBF3E83AF5B7641059`／**+1−1**；报告 **46,089 B**／**592 行**／SHA-256 `D13854EF4984FADCCC87A84770A3E39DBBFFAB0AA7691CEC68A260FF7D514F99`／**+41−11**；两件 UTF-8 无 BOM、LF、0 U+FFFD、0 行尾空白。
+- **`report-check.js` 五根复跑（R196／ETIM 1.12／forge／主 mod／附属）**：报告 **anchors 49 missing 0、tables 22 bad 0**；摸底 **anchors 78 missing 0、tables 28 bad 0**；两件均 `OK`。
+- **B-审2 独立复测（不采信转述）**：主 mod `src\main\java` 内 `shieldWearRate` 命中 **9**——**码面 5**：`ETIMConfig.java:369`/`:869`、`combat\ETIMBlocking.java:144`/`:153`、`combat\ETIMBlockLog.java:145`；**注释面 4**：`ETIMBlocking.java:48`/`:134`、`ETIMBlockLog.java:39`/`:113`。与终审、报告新 N-7 逐条一致（原「6 处」确漏 3 注释）。
+- **B/C 落点核讫**：
+  - **B-审1**：§1.3 伪码注释与硬约束句①已改为「防支②谓词被写成 `isShieldStack` 虚分派（五盾覆写 `isShield=true` 即被吞）＋未来 `ItemShield × ETIMShield` hybrid」；次序不变。实测五盾 `extends Item`（`ETIMExtraItemShield.java:47`），原「被木盾常量吃掉」论据作废属实。
+  - **B-审3／T-6**：批头新增 provenance 声明段；新增 **§7.4** 四行（曲线／幽魂差分／磨率体系／耐久三值）＋判点纪律句。
+  - **B-审4**：§2.3 新增「同批必改的附属 javadoc」四段；锚点实测命中（`:38-45` 派生耐久整段、`:60-61` `@param durability`、`ETIMExtra.java:22`/`:34` 旧磨率句）。
+  - **C-审1**：「五盾 ×1.4/0.5」→「银盾 ×1.4/0.5，其余四盾 ×1.0」；**C-审2** 字段注释删「木」并注明木盾是 vanilla `ItemShield`；**C-审3** 补 `wearShieldOrTool(player, active, raw, blocked, shield, source)` 签名行；**C-审4** 支③加异 mod 盾边界注释（本环境零实例）。
+  - **终审前置①**：§2.3 补 `/100.0F` + clamp 0~1 换算段，含「`percent / 100.0F` 与字面常量逐位相同 6/6」。
+  - **脚注**：档尾改「第 4 轮／第 1–3 轮已提交、第 4 轮未 commit」；N-3 补「第 6 命中是小写注释 `// devtools ---`」。
+- **1 项 C 级残留（不阻塞，下轮顺手）**：批头 provenance 段写「三处超 R196 面**均标 (b) 自创**」，而 **§7.4 第 3 行磨率体系**标的是「**(b) 准自创**」——同一件内两种标签。建议统一为「(b) 自创」（磨率确无一手可对位），或批头改成「(b)（磨率体系为准自创）」。不影响判值与落码。
+- **附注**：档尾「第 4 轮改动未 commit」在本条提交 `bd40197` 后即成历史陈述，下轮改档尾时一并更新即可，不回改本轮。
+- **钉值**：jar **30,285 B／`7D3F04F1AF648EE4E7C2EE273DA3599BC17A864D8FA9DF4D5575800476D4EE4D`／mtime 2026-10-28 22:28:28**／产品码 `c66c099` **未动**，0 rebuild（两件均 `.md`）。阻塞 0；等待项 = 正式派修 + `ETIMShield`／`ETIMGhost` 同批 mavenLocal + 接口 jar 钉值。
