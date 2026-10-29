@@ -366,3 +366,16 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **新增 1 项待补（不阻塞落码，阻塞 W-16 银盾幽魂腿）**：`ETIMGhost.markSpectral` 目前**没有调用方**（幽魂实体批未落），窗内无法自然产生 `spectral=true`。请在派修同批给出测试口——`etest hurtspec`（或 `etest hurt … spectral`）——或确认幽魂实体同批落地；否则 W-16 的银盾 65/0.5 腿只能标「未实测」。
 - **设计风险注记（C 级）**：`markSpectral` 若收到**静态单例** `DamageSource`（如 `DamageSource.magic` 一类），WeakSet 条目会被静态字段永久持有 ⇒ 该源后续所有攻击都带幽魂。请确保调用点只传逐次 `new` 的实例（他们口径如此，登记待核）。
 - **钉值**：本机 jar **30,285 B／`7D3F04F1…D4EE4D`／`c66c099`** 未动，0 rebuild。
+
+## 条 30 · 削弱批验证面闭合：预登记锁死 + `etimghost` 测试口 + 类型门（仍未落码，2026-10-29）
+
+- **来源**：主 mod 主会话「验证面闭合回执」，用户中转。**我方零落码、零 action**；主 mod 源码实测仍无 `ETIMShield` / `ETIMGhost` / `etimghost`（HEAD `7a26c6f`）。
+- **预登记核讫**：主侧逐位确认我方 W-16 预测表**无一偏差**（铜 3.6/9、银物理 4.8/16、银幽魂 2.8/3、远古 2.8/7、秘银 2.0/5、艾德曼 1.6/4；单点腿 2/3/1/2/2/2，其中银物理 3 来自 `1×2.5×1.4=3.5` 截断、银幽魂 1 来自 `1.25` 截断）⇒ **预登记锁死，窗内纯对差**。
+- **测试口钉死（裁定选 1，幽魂实体不在本批，M-4 仍挂账）**：`etimghost hurt <selector> <amount> <spectral:true|false>`——构造逐次 `new` 的 `EntityDamageSource("etimspectral", …)`，`true` 时调 `ETIMGhost.markSpectral(src)`，再 `player.attackEntityFrom(src, amount)`；`false` 腿走同一命令作**负鉴**（非幽实体攻击不打 +25%）。**不给 `etest hurt` 加参**（`etest` 判据面已闭单，不动闭单件）。
+- **C 级风险闭合**：①调用点只传逐次 `new` 的 `EntityDamageSource`，静态单例全不进标记口；②`markSpectral` 加**类型门**，非 `EntityDamageSource` 一律拒绝并打 `[BlockLog] ghost-mark rejected src=<...>`；③WeakSet 生命周期与类型门对齐 ⇒ C 级降为**不可达**。
+- **依赖序**：正式派修 + 接口 jar（`ETIMShield` + `ETIMGhost`）同批 `publishToMavenLocal`，回传 commit + 钉值；我方收到后先编译对照，再进 W-16。
+- **我方 C 级观察（已发回执，不影响落码）**：
+  1. `EntityDamageSource` 的**源实体**若传受害者本人（「假人 target」字面读法），`getTrueSource()` 会等于受害者 ⇒ 自伤语义，可能影响击退/仇恨类处理；建议改用场上的标记僵尸（或专用 marker 实体）作源实体。格挡数学不受影响，但 `[BlockLog] src=` 与真怪路径的可比性受影响。
+  2. 自定义类型 `etimspectral` 在当前代码下**不被过滤**：`r196ArmorBypassed = isUnblockable() || isFireDamage()`、`isR196Absolute = isDamageAbsolute() || OUT_OF_WORLD`（`R196ArmorModel.java:349-361`）——只要测试源不设 bypass/absolute 位，`LivingHurtEvent` 会正常进盾链。
+  3. W-16 判行将以 `src=etimspectral` 为键（不是 `src=mob`），并要求 `block … spectral=true|false` 与 `wear … rate=2.500 mult=…` 同屏互证。
+- **钉值**：本机 jar **30,285 B／`7D3F04F1…D4EE4D`／`c66c099`** 未动，0 rebuild；阻塞计数 0，等待项 = 正式派修 + 接口 jar 钉值。
