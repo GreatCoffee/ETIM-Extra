@@ -527,3 +527,23 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **账目**：主账 条 116/117/118（对照报告／终审／派修 10 要件）由主会话声明已挂——主账在主 mod 仓，我方**只读不写**，未核原文。
 - **钉值**：本机 jar **30,285 B｜`7D3F04F1AF648EE4E7C2EE273DA3599BC17A864D8FA9DF4D5575800476D4EE4D`｜mtime 2026-10-28 22:28:28**／产品码 `c66c099` **未动**，0 rebuild。
 - **状态**：阻塞 0；等待项 = 接口 jar 钉值（`ETIMShield` + `ETIMGhost` 同批 mavenLocal）。收到后序：编译对照 → 落码三件 → rebuild + 冒烟 → W-16 → README §2/§3/§4/§5/§11 与重钉 → 账本记落码条 + jar 钉值。
+
+## 条 38 · 派修回执收讫 + 8 键终案裁定 + 主侧六件预核（B 级 1 项 / C 级 3 项，仍未落码，2026-10-29）
+
+- **来源**：主会话「派修确认收讫 + C 级措辞裁定（jar 钉值随落码回传）」，用户中转。**我方仍零落码、零 rebuild**。
+- **C 级措辞裁定（照录）**：按我方拟式执行，**8 键终案**——`shield.{copper,silver,ancientMetal,mithril,adamantium}.reduction` = 55/40/65/75/80 + `shield.silver.spectralReduction` = 65 + `shield.silver.wear` = 1.4 + `shield.silver.spectralWear` = 0.5；非银盾不设 `wear` 键（乘子恒 1.0 字面常数）；派修单 §三.2 的「10+4」为发起文本冗余，主账以 条 118 为准；冻结文档不动面维持。
+- **裁定文本拼写勘误（就地）**：回执键名写作 `adamanantium`（多一个 `an`）。项目材料名、报告 §2.3、我方待落键名一律 **`adamantium`** ⇒ 落码键 = **`shield.adamantium.reduction`**。纯拼写，无判值影响；若主账 条 118 含同拼写，请其侧补记或由本条备用。
+- **主侧六件现状（只读实测，不采信转述）**：HEAD 仍 **`7a26c6f`**；工作树 **6 改**（`build.gradle`、`ETIM.java`、`ETIMConfig.java`、`ETIMBlockLog.java`、`ETIMBlocking.java`、`harness/TestDriver.java`）+ **3 新**（`combat/ETIMShield.java` 1,804 B、`combat/ETIMGhost.java` 2,138 B、`commands/CommandEtimGhost.java` 1,917 B，mtime 13:12–13:14）+ 1 个非我方未跟踪件 `testharness/pose/probe-tmp.js`；**均未 commit** ⇒ 不作引件钉值。mavenLocal 仍 2026-10-28 18:41:50（`dev` 746,954 B）⇒ **接口 jar 未回传**。
+- **接口面逐条对读（编译前预核）**：
+  - `ETIMShield`：`default float getBlockReduction(DamageSource)` → `ETIMConfig.shieldWoodReduction`；`default float getWearMultiplier(DamageSource)` → `1.0F`。**签名与冻结一致**；default 走配置键而非字面 0.5（缺省 0.5 ⇒ 逐位相同，且我方两个方法全覆写，无影响）。
+  - `ETIMGhost`：`static boolean isSpectral(DamageSource)` **✓**；`static void markSpectral(DamageSource)` —— **返回 `void` ≠ 冻结 `boolean`**（条 31 D31-5 钉 boolean）；侧表 `Collections.newSetFromMap(new WeakHashMap<>())` **未加 `synchronizedSet`**；拒绝行 = `ETIM.LOGGER.info("ghost-mark rejected src=<FQCN> [server]")`，**无 `[BlockLog]` 前缀**、`src=` 为类名非 `<type>`。⇒ **C 级 3 项**：我方只调 `isSpectral`，**编译面零影响**；W-16 若触发拒绝行则不在判据通道（该路径按设计不可达）。
+  - `CommandEtimGhost`：`/etimghost hurt <selector> <amount> <spectral:true|false>`、permission 2、`devTools` 门内注册（`ETIM.java` 141 区）**✓**；`spectral = "true".equalsIgnoreCase(args[3])` ⇒ 非 `true` 字串**静默按 false**（窗内必须字面写 `true`／`false`，写 `1` 会静默走物理腿）。
+  - `TestDriver.hurtSpectral`：逐次 `new EntityDamageSource("etimspectral", player)`，源实体 = **受害者本人**（我方 条 30 C-1 建议未采纳）⇒ 自伤语义；判据只吃 `block`/`wear` 两行、数学不受影响，登记为 W-16 已知条件（若 `src=etimspectral` 行伴异常击退/仇恨，可换场上标记僵尸）。
+- **判行面实测对读（1 项 B 级 + 2 项 C 级）**：
+  - **B-38-1（B 级，主侧一行可修）`wear` 行 `rate=` 语义与冻结相反**：冻结（条 31 判面更新 + 条 33 行形定稿）= `rate` 打**有效总率** 2.5×mult（银物 **3.500**、银幽 **1.250**）；实装 `rate = ETIMConfig.shieldWearRateBase`（恒 **2.500**）+ `mult`（1.400/0.500）。**`wear` 数值本身正确**（`(int)floor(blocked×rate×mult+1e-4)`），仅日志字段口径不同。**修法一行**：盾行改 `f3(rate * mult)`。若不修，则 W-16 判点须改成 `rate×mult` 并开 C 级勘误重开报告 §1.4——不如主侧改一行。**建议在其编译/发布前修掉**。
+  - **C-38-2（C 级）`wear` 行多一个 `shield=<b>` 字段**（位于 `item=` 与 `rate=` 之间），冻结四形无此字段。附加字段不破坏按键盘读；**我方判行一律键值解析、不按位置**，登记即可。
+  - **C-38-3（C 级，判点钉）`block` 行 `factor=` = `blocked/raw`（本击实际保留系数）**：未触地板时 = 1−r（与预测表一致）；触 1.0 地板臂（raw=1）打印 **1.000**，非 1−r。⇒ **W-16 判点钉死：`factor` 只在 raw=8 臂判**（铜 0.450／银物 0.600／银幽 0.350／远古 0.350／秘银 0.250／艾德曼 0.200／木 0.500）；**raw=1 臂只判 `wear`／`rate`／`mult`**。
+- **W-16 预测表不变（9/2、16/3、3/1、7/2、5/2、4/2、10/2）**，三条前置实测在册：① 五盾 `isShield` 覆写在案（`ETIMExtraItemShield.java:92`），`isShieldStack = stack.getItem().isShield(stack, null)` 为 true ⇒ 走 **① `instanceof ETIMShield` 支**（不会被 ② 木盾常量吃掉）；② epsilon 只盾两臂（`(int)Math.floor(x + 1.0E-4)`），工具臂 `(int)(blocked*decay)` 一字未动；③ `r` clamp 0~1 + `max(raw×(1−r), blockMinDamage)` 与 `net = max(1.0, raw×(1−r))` 等价。
+- **环境提示（可直接给主侧）**：RFG 2.0.3 构建确实需要 JVM 25；本机已装 **`C:\Users\GreatCoffee\tools\jdk-25.0.4.1+1`**（本附属项目即用它起 `gradlew` 且全绿）。主侧若卡在 buildscript class 版本，把 `JAVA_HOME` 指向同一目录即可，无需另装。
+- **钉值**：本机 jar **30,285 B｜`7D3F04F1AF648EE4E7C2EE273DA3599BC17A864D8FA9DF4D5575800476D4EE4D`｜mtime 2026-10-28 22:28:28**／产品码 `c66c099` **未动**，0 rebuild。
+- **状态**：阻塞 0；等待项 = 接口 jar 钉值（六件 commit + 同批 `publishEtimLocalPublicationToMavenLocal`）。**唯一建议前置修** = B-38-1（一行）；其余 C 级不阻塞。
