@@ -30,37 +30,37 @@ An add-on mod for ETIM (Easy Times In Minecraft). It adds five metal shields on 
 
 ## 五件盾 / The five shields
 
-五件盾，一件对应 R196 材料表里一种有锭的金属。耐久见「数值与来源」；附魔度是材料行一手值。
+五件盾，一件对应 R196 材料表里一种有锭的金属。耐久与减伤见「数值与来源」；附魔度是材料行一手值。
 
-Five shields, one per ingot-bearing metal of the R196 material table. Durability is covered in "Values and provenance"; enchantability is a first-hand value from the material row.
+Five shields, one per ingot-bearing metal of the R196 material table. Durability and reduction are covered in "Values and provenance"; enchantability is a first-hand value from the material row.
 
-| 物品 id / Item id | 中文名 / Chinese name | English name | 耐久 / Durability | 附魔度 / Enchantability |
-|---|---|---|---|---|
-| `etimextra:copper_shield` | 铜盾 | Copper Shield | 1,600 | 30 |
-| `etimextra:silver_shield` | 银盾 | Silver Shield | 1,600 | 30 |
-| `etimextra:ancient_metal_shield` | 远古金属盾 | Ancient Metal Shield | 6,400 | 40 |
-| `etimextra:mithril_shield` | 秘银盾 | Mithril Shield | 25,600 | 100 |
-| `etimextra:adamantium_shield` | 艾德曼盾 | Adamantium Shield | 102,400 | 40 |
+| 物品 id / Item id | 中文名 / Chinese name | English name | 耐久 / Durability | 减伤（物理／幽魂）/ Reduction (phys / ghost) | 附魔度 / Enchantability |
+|---|---|---|---|---|---|
+| `etimextra:copper_shield` | 铜盾 | Copper Shield | 1,600 | 55% / 55% | 30 |
+| `etimextra:silver_shield` | 银盾 | Silver Shield | 1,600 | 40% / 65% | 30 |
+| `etimextra:ancient_metal_shield` | 远古金属盾 | Ancient Metal Shield | 3,200 | 65% / 65% | 40 |
+| `etimextra:mithril_shield` | 秘银盾 | Mithril Shield | 6,400 | 75% / 75% | 100 |
+| `etimextra:adamantium_shield` | 艾德曼盾 | Adamantium Shield | 12,800 | 80% / 80% | 40 |
 
 ## 与主 mod 的分工 / Division of labour
 
-格挡机制在主 mod 的 `combat/ETIMBlocking`：伤害半减（8 → 4，×0.5）、下限 1.0、磨损 `(int)(blocked × shieldWearRate)`（默认 rate 1.0）。本附属只有物品、配方、模型与纹理；没有自有格挡代码，也没有 mixin 类。
+格挡机制在主 mod 的 `combat/ETIMBlocking`：三支分发——① 本附属五盾实现的 `ETIMShield` 接口先于 ② vanilla `ItemShield`（木盾常量 0.5）；伤害下限 1.0；磨损 `(int)Math.floor(blocked × 2.5 × mult + 1e-4)`（epsilon 只给盾两臂，木盾 mult = 1.0）。本附属只持数值面：减伤曲线、银盾幽魂面与磨损乘子；没有自有格挡代码，也没有 mixin 类。
 
-The blocking mechanism lives in the main mod's `combat/ETIMBlocking`: damage is halved (8 → 4, ×0.5), with a 1.0 floor and wear of `(int)(blocked × shieldWearRate)` (default rate 1.0). This add-on owns only items, recipes, models and textures; it has no blocking code of its own and no mixin class.
+The blocking mechanism lives in the main mod's `combat/ETIMBlocking`: a three-arm dispatch where ① the `ETIMShield` interface implemented by this add-on's five shields comes before ② vanilla `ItemShield` (wood constant 0.5), with a 1.0 damage floor and wear of `(int)Math.floor(blocked × 2.5 × mult + 1e-4)` (the epsilon is shield-arm only; the wood shield has mult = 1.0). This add-on owns only the numeric face — the reduction curve, the silver ghost face and the wear multipliers; it has no blocking code of its own and no mixin class.
 
 ## 数值与来源 / Values and provenance
 
-耐久公式为 `4.0 × 1 × durabilityFactor × 100`，因子取自主 mod 的 `ETIMMetals`（`:37-41`，其值对应 R196 材料行的耐久列）。耐久是派生值，不是 R196 一手值：R196 没有盾。附魔度是一手值，代码直读主 mod 的 `ETIMMetals.enchantability`；本 README 表中的数字是该列的展示值，代码不复制常量。
+耐久与减伤都是本批的**终裁平衡值**（provenance (b)，自创）：R196 没有盾，不存在一手可对位值。耐久以铜 1,600 为基，远古 ×2、秘银 ×4、艾德曼 ×8 ⇒ 3,200 / 6,400 / 12,800（旧「4.0 × 1 × d × 100」派生式已废）；减伤曲线为铜 55% / 银 40% / 远古 65% / 秘银 75% / 艾德曼 80%，木盾仍取主 mod 常量 50%。银盾幽魂面是**绝对值** 65%（D-7，不随物理面漂移），磨损乘子为物理 ×1.4 / 幽魂 ×0.5，其余四盾两面均 ×1.0（不设 `wear` 键）。附魔度仍是一手值，代码直读主 mod 的 `ETIMMetals.enchantability`；本 README 表中的数字是该列的展示值，代码不复制常量。
 
-Durability follows `4.0 × 1 × durabilityFactor × 100`, with the factor taken from the main mod's `ETIMMetals` (`:37-41`; those values correspond to the material row's durability column in R196). Durability is DERIVED: it is not a first-hand R196 value, because R196 has no shield. Enchantability is a first-hand value read straight from the main mod's `ETIMMetals.enchantability`; the numbers in the table above display that column, and the code copies no constants.
+Durability and the reduction curve are this batch's **final balance values** (provenance (b), invented): R196 has no shield, so there is no first-hand counterpart. Durability starts from copper 1,600, then ×2 / ×4 / ×8 ⇒ 3,200 / 6,400 / 12,800 (the old `4.0 × 1 × d × 100` derivation is retired); the curve is copper 55% / silver 40% / ancient 65% / mithril 75% / adamantium 80%, while the wood shield keeps the main mod's 50% constant. The silver ghost face is an **absolute** 65% (D-7, it does not follow the physical face); wear multipliers are ×1.4 physical / ×0.5 ghost for silver and ×1.0 on both faces for the other four (no `wear` key). Enchantability is still a first-hand value read straight off the main mod's `ETIMMetals.enchantability`; the numbers in the table above display that column, and the code copies no constants.
 
-| 金属 / Metal | 因子 / Factor | 算式 / Formula |
-|---|---|---|
-| COPPER | 4 | `4.0 × 1 × 4 × 100` |
-| SILVER | 4 | `4.0 × 1 × 4 × 100` |
-| ANCIENT_METAL | 16 | `4.0 × 1 × 16 × 100` |
-| MITHRIL | 64 | `4.0 × 1 × 64 × 100` |
-| ADAMANTIUM | 256 | `4.0 × 1 × 256 × 100` |
+| 金属 / Metal | 耐久 / Durability | 减伤（物理）/ Reduction (phys) | 减伤（幽魂）/ Reduction (ghost) | 磨损乘子（物理／幽魂）/ Wear mult (phys / ghost) |
+|---|---|---|---|---|
+| COPPER | 1,600 | 55% | 55% | 1.0 / 1.0 |
+| SILVER | 1,600 | 40% | 65% | 1.4 / 0.5 |
+| ANCIENT_METAL | 3,200 | 65% | 65% | 1.0 / 1.0 |
+| MITHRIL | 6,400 | 75% | 75% | 1.0 / 1.0 |
+| ADAMANTIUM | 12,800 | 80% | 80% | 1.0 / 1.0 |
 
 ## 配方与合成 / Recipes and crafting
 
@@ -125,29 +125,46 @@ The config file is `config/etimextra.cfg` (a standard Forge Configuration). Valu
 | `debug.extraDebugLog` | `false` | `[ExtraLog]` 盾面判行开关 / switch for the `[ExtraLog]` shield rows |
 | `shield.copperDurability` | `1600` | 铜盾耐久 / copper shield durability |
 | `shield.silverDurability` | `1600` | 银盾耐久 / silver shield durability |
-| `shield.ancientMetalDurability` | `6400` | 远古金属盾耐久 / ancient metal shield durability |
-| `shield.mithrilDurability` | `25600` | 秘银盾耐久 / mithril shield durability |
-| `shield.adamantiumDurability` | `102400` | 艾德曼盾耐久 / adamantium shield durability |
+| `shield.ancientMetalDurability` | `3200` | 远古金属盾耐久 / ancient metal shield durability |
+| `shield.mithrilDurability` | `6400` | 秘银盾耐久 / mithril shield durability |
+| `shield.adamantiumDurability` | `12800` | 艾德曼盾耐久 / adamantium shield durability |
+| `shield.copper.reduction` | `55` | 铜盾减伤百分比 / copper shield blocked percent |
+| `shield.silver.reduction` | `40` | 银盾物理面减伤百分比 / silver physical-face blocked percent |
+| `shield.silver.spectralReduction` | `65` | 银盾幽魂面减伤百分比（绝对值，D-7）/ silver ghost-face blocked percent (absolute) |
+| `shield.ancientMetal.reduction` | `65` | 远古金属盾减伤百分比 / ancient metal shield blocked percent |
+| `shield.mithril.reduction` | `75` | 秘银盾减伤百分比 / mithril shield blocked percent |
+| `shield.adamantium.reduction` | `80` | 艾德曼盾减伤百分比 / adamantium shield blocked percent |
+| `shield.silver.wear` | `1.4` | 银盾物理面磨损乘子（相对主 mod 基准 2.5）/ silver physical-face wear multiplier |
+| `shield.silver.spectralWear` | `0.5` | 银盾幽魂面磨损乘子 / silver ghost-face wear multiplier |
+
+减伤以整数百分比存盘，`ETIMExtraContent` 读出后 `/ 100.0F` 并 clamp 0~1 再进构造器。非银四盾**不设** `wear` 键：乘子恒 1.0 字面常数，不做死键。
+
+Reductions are stored as integer percentages; `ETIMExtraContent` divides by `100.0F`, clamps to 0..1 and hands the fraction to the constructor. The other four shields have **no** `wear` key: their multiplier is the literal 1.0.
 
 ## 判断通道 / Judgement channel
 
 日志通道是 `[ExtraLog]` 行。`[ExtraLog] preInit` 与 `[ExtraLog] boot ok - side=…` 两行不受开关限制，是冒烟轮的断言。盾面判行由 `debug.extraDebugLog` 控制；关闭时判行在首行即返回，对数值零影响。
 
+盾面削弱批的实际判据在主 mod 的 `[BlockLog]` 行（`combat/ETIMBlockLog`，由主 mod 的 `blockDebugLog` 控制）：`block` 行给 `blocked`/`factor`/`spectral`，`wear` 行给 `rate`（= 2.5 × mult）/`mult`/`wear`/`dur`。测试口是 `/etimghost hurt <selector> <amount> <spectral:true|false>`（`devTools` 门内）。
+
 The judgement channel is the `[ExtraLog]` rows. Two rows are ungated on purpose and serve as the smoke round's assertion: `[ExtraLog] preInit` and `[ExtraLog] boot ok - side=…`. The shield rows are gated by `debug.extraDebugLog`; when it is off those rows return on their first line and have zero effect on values.
+
+The shield-nerf batch itself is judged on the main mod's `[BlockLog]` rows (`combat/ETIMBlockLog`, gated by the main mod's `blockDebugLog`): the `block` row carries `blocked`/`factor`/`spectral`, the `wear` row carries `rate` (= 2.5 × mult)/`mult`/`wear`/`dur`. The test entry point is `/etimghost hurt <selector> <amount> <spectral:true|false>` (inside the `devTools` gate).
 
 ## 现状与账本 / Status and ledger
 
-五件盾全链闭单：服务端数值 W-1…W-11、真实合成 W-13/W-14、逐一受击 W-15；客户端面 W-12 由用户判为正常；附魔名由用户肉眼观察，不是日志判据。测试由独立测试会话（主 mod 项目的会话七）执行；W-13/W-14 曾换执行方独立复跑，逐项同值。
+五件盾原批全链闭单（W-1…W-15）。盾面削弱批已落码：五盾实现 `ETIMShield`（减伤曲线 + 银盾幽魂面 + 磨损乘子），耐久改为终裁三值（3,200 / 6,400 / 12,800）；W-16 七腿 × 两臂全 PASS（14/14 行对表，含 A-2 边界两格：铜 8→9、艾德曼 8→4）；W-17…W-23 待跑；L3（耐久附魔）列维持「未实测（依赖耐久附魔面统一批）」，不标「不通过」。测试由独立测试会话（主 mod 项目的会话七）执行；W-13/W-14 曾换执行方独立复跑，逐项同值。
 
-All five shields are closed across the whole chain: server-side values W-1…W-11, real crafting W-13/W-14, per-shield hits W-15; client face W-12 was judged normal by the user; enchantment names were observed by eye, not by a log criterion. Testing ran in an independent test session (session 7 of the main mod project); W-13/W-14 were rerun once by a different executor with identical results.
+All five shields closed the original chain (W-1…W-15). The shield-nerf batch is landed: the five shields implement `ETIMShield` (reduction curve + silver ghost face + wear multipliers) and the final three durability values (3,200 / 6,400 / 12,800); W-16 passed all seven legs × two arms (14/14 rows on table, including both A-2 boundary cells: copper 8→9, adamantium 8→4); W-17…W-23 are pending; the L3 (durability enchant) column stays "not measured (waiting for the unified durability-enchant batch)" and is never marked failing. Testing ran in an independent test session (session 7 of the main mod project); W-13/W-14 were rerun once by a different executor with identical results.
 
 | 钉值项 / Pinned item | 值 / Value |
 |---|---|
-| jar | `build/libs/etimextra-0.1.0.jar`，30,285 B |
-| SHA-256 | `7D3F04F1AF648EE4E7C2EE273DA3599BC17A864D8FA9DF4D5575800476D4EE4D` |
-| 产品码 commit / product commit | `c66c099` |
-| 重建 / rebuild | 1（仅元数据与注释；只做冒烟起服，功能窗未重跑）/ 1 (metadata and comments only; smoke boot only, no functional rerun) |
+| jar | `build/libs/etimextra-0.1.0.jar`，31,614 B |
+| SHA-256 | `2D42D78AE475E2261C9071B980322570EC7003FC86961771CF32D8374C847A98` |
+| mtime | 2026-10-29 13:40:06 |
+| 产品码 commit / product commit | 落码提交（见账本 条 40 / see ledger entry 40） |
+| 重建 / rebuild | 1（本批落码；W-16 窗内 0 重建）/ 1 (this landing; 0 rebuild inside the W-16 window) |
 
-钉值快照日期为 2026-10-28（22:28 的元数据与注释批：模组列表描述改为五件盾、入口 javadoc 列全五件；无逻辑改动）。账本是 `playground/audit/audit-extra-裁定回执.md`（append-only，条 1 起；盾批闭单与交接为条 1–24）；回执目录是 `testharness/reports/`，含五份 `extra-shield-*-verdict.md`。
+钉值快照日期为 2026-10-29。账本是 `playground/audit/audit-extra-裁定回执.md`（append-only，条 1 起；盾批闭单与交接为条 1–24，盾面削弱批为条 25 起）；回执目录是 `testharness/reports/`，含五份原批 `extra-shield-*-verdict.md` 与削弱批 `extra-shield-nerf-w16-verdict.md`。
 
-The pinned snapshot is dated 2026-10-28 (the 22:28 metadata/comment batch: the mod-list description now names all five shields and the entry javadoc lists all five; no logic change). The ledger is `playground/audit/audit-extra-裁定回执.md` (append-only, starting at entry 1; entries 1–24 cover the shield batch and the hand-off); the verdict directory is `testharness/reports/`, holding five `extra-shield-*-verdict.md` files.
+The pinned snapshot is dated 2026-10-29. The ledger is `playground/audit/audit-extra-裁定回执.md` (append-only, starting at entry 1; entries 1–24 cover the original shield batch and the hand-off, entries 25+ the shield-nerf batch); the verdict directory is `testharness/reports/`, holding the five original `extra-shield-*-verdict.md` files plus `extra-shield-nerf-w16-verdict.md`.

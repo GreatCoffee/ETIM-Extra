@@ -72,18 +72,38 @@ public final class ETIMExtraContent {
      *  注册五件盾、断言注册成功，再注册对应配方。 */
     public static void register() {
         copperShield = register("copper_shield", ETIMMetals.COPPER,
-                ETIMExtraConfig.shieldCopperDurability);
+                ETIMExtraConfig.shieldCopperDurability,
+                percent(ETIMExtraConfig.shieldCopperReduction),
+                percent(ETIMExtraConfig.shieldCopperReduction), 1.0F, 1.0F);
         silverShield = register("silver_shield", ETIMMetals.SILVER,
-                ETIMExtraConfig.shieldSilverDurability);
+                ETIMExtraConfig.shieldSilverDurability,
+                percent(ETIMExtraConfig.shieldSilverReduction),
+                percent(ETIMExtraConfig.shieldSilverSpectralReduction),
+                ETIMExtraConfig.shieldSilverWear, ETIMExtraConfig.shieldSilverSpectralWear);
         ancientMetalShield = register("ancient_metal_shield", ETIMMetals.ANCIENT_METAL,
-                ETIMExtraConfig.shieldAncientMetalDurability);
+                ETIMExtraConfig.shieldAncientMetalDurability,
+                percent(ETIMExtraConfig.shieldAncientMetalReduction),
+                percent(ETIMExtraConfig.shieldAncientMetalReduction), 1.0F, 1.0F);
         mithrilShield = register("mithril_shield", ETIMMetals.MITHRIL,
-                ETIMExtraConfig.shieldMithrilDurability);
+                ETIMExtraConfig.shieldMithrilDurability,
+                percent(ETIMExtraConfig.shieldMithrilReduction),
+                percent(ETIMExtraConfig.shieldMithrilReduction), 1.0F, 1.0F);
         adamantiumShield = register("adamantium_shield", ETIMMetals.ADAMANTIUM,
-                ETIMExtraConfig.shieldAdamantiumDurability);
+                ETIMExtraConfig.shieldAdamantiumDurability,
+                percent(ETIMExtraConfig.shieldAdamantiumReduction),
+                percent(ETIMExtraConfig.shieldAdamantiumReduction), 1.0F, 1.0F);
         shields = new Item[] {copperShield, silverShield, ancientMetalShield, mithrilShield, adamantiumShield};
         assertRegistered();
         registerRecipes();
+    }
+
+    /** 条 29.4 conversion: the config stores integers in percent, the interface
+     *  takes 0..1 fractions — {@code percent / 100.0F} is bit-identical to the
+     *  literal float constants (6/6 measured), so the division adds no epsilon
+     *  surface; the clamp is the guard against a mistyped 55.0F.
+     *  百分比配置 ÷ 100 并 clamp 0~1（条 29.4；已实测逐位相同）。 */
+    private static float percent(int value) {
+        return Math.max(0.0F, Math.min(1.0F, value / 100.0F));
     }
 
     /** The registered shields in registration order. 按注册序返回五件盾。 */
@@ -91,8 +111,10 @@ public final class ETIMExtraContent {
         return shields.clone();
     }
 
-    private static Item register(String name, ETIMMetals metal, int durability) {
-        Item item = new ETIMExtraItemShield(metal, durability);
+    private static Item register(String name, ETIMMetals metal, int durability, float reduction,
+            float spectralReduction, float wearMultiplier, float spectralWearMult) {
+        Item item = new ETIMExtraItemShield(metal, durability, reduction, spectralReduction,
+                wearMultiplier, spectralWearMult);
         item.setRegistryName(new ResourceLocation(ETIMExtra.MOD_ID, name));
         item.setTranslationKey(ETIMExtra.MOD_ID + "." + name);
         ForgeRegistries.ITEMS.register(item);

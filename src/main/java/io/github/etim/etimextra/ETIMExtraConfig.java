@@ -33,48 +33,93 @@ public final class ETIMExtraConfig {
 
     // shield ------------------------------------------------------
     /**
-     * 铜盾耐久（<b>派生值</b>：{@code 4.0F × 1 × 4.0F × 100.0F} — R196
-     * {@code ItemTool.java:36-42} 算式 + 主 mod 材料行 {@code ETIMMetals.COPPER}
-     * （{@code ETIMMetals.java:37}），{@code components=1} 由裁定 T-1 定）。R196
-     * 无盾（立项摸底 A-1），故它不是一手盾值；玩家可感知，故可配。
+     * 铜盾耐久（<b>终裁平衡值</b>，provenance (b) 自创）：本批以铜 1,600 为基，
+     * 远古 ×2、秘银 ×4、艾德曼 ×8 ⇒ 3,200 / 6,400 / 12,800。与 R196 工具公式
+     * （{@code 4.0F × 1 × d × 100}）无关——旧派生式已废（A-1）；R196 无盾（立项
+     * 摸底 A-1），故无一手可对位值。玩家可感知，故可配。
      *
-     * <p>Copper shield max damage — DERIVED, not an R196 shield value.</p>
+     * <p>Copper shield max damage — the batch's final balance value
+     * (provenance (b)): the 1,600 base of the ×2/×4/×8 ladder.</p>
      */
     public static int shieldCopperDurability = 1600;
 
     /**
-     * 银盾耐久（<b>派生值</b>：{@code 4.0F × 1 × 4.0F × 100.0F} — 同上，
-     * {@code ETIMMetals.java:38}）。性质同铜盾。
+     * 银盾耐久（<b>终裁平衡值</b>，provenance (b)）：与铜盾同档 1,600（银的
+     * 差异只在减伤与磨率两面，不在耐久）。性质同铜盾。
      *
-     * <p>Silver shield max damage — DERIVED, not an R196 shield value.</p>
+     * <p>Silver shield max damage — final balance value, same 1,600 tier as copper.</p>
      */
     public static int shieldSilverDurability = 1600;
 
     /**
-     * 远古金属盾耐久（<b>派生值</b>：{@code 4.0F × 1 × 16.0F × 100.0F} — 同上，
-     * {@code ETIMMetals.java:39}）。性质同铜盾。
+     * 远古金属盾耐久（<b>终裁平衡值</b>，provenance (b)）：铜 1,600 ×2 = 3,200。
+     * 性质同铜盾。
      *
-     * <p>Ancient metal shield max damage — DERIVED, not an R196 shield value.</p>
+     * <p>Ancient metal shield max damage — final balance value, 1,600 ×2 = 3,200.</p>
      */
-    public static int shieldAncientMetalDurability = 6400;
+    public static int shieldAncientMetalDurability = 3200;
 
     /**
-     * 秘银盾耐久（<b>派生值</b>：{@code 4.0F × 1 × 64.0F × 100.0F} — R196
-     * {@code ItemTool.java:36-42} + {@code EnumEquipmentMaterial.java:14}，
-     * {@code components=1} 由裁定 T-1 定）。R196 无盾（立项摸底 A-1），故它不是
-     * 一手盾值；玩家可感知，故可配。
+     * 秘银盾耐久（<b>终裁平衡值</b>，provenance (b)）：铜 1,600 ×4 = 6,400。
+     * 性质同铜盾。
      *
-     * <p>Mithril shield max damage — DERIVED, not an R196 shield value.</p>
+     * <p>Mithril shield max damage — final balance value, 1,600 ×4 = 6,400.</p>
      */
-    public static int shieldMithrilDurability = 25600;
+    public static int shieldMithrilDurability = 6400;
 
     /**
-     * 艾德曼盾耐久（<b>派生值</b>：{@code 4.0F × 1 × 256.0F × 100.0F} — 同上，
-     * {@code :15}）。性质同秘银盾。
+     * 艾德曼盾耐久（<b>终裁平衡值</b>，provenance (b)）：铜 1,600 ×8 = 12,800。
+     * 性质同铜盾。
      *
-     * <p>Adamantium shield max damage — DERIVED, not an R196 shield value.</p>
+     * <p>Adamantium shield max damage — final balance value, 1,600 ×8 = 12,800.</p>
      */
-    public static int shieldAdamantiumDurability = 102400;
+    public static int shieldAdamantiumDurability = 12800;
+
+    // shield reduction curve + silver ghost face + wear multipliers ------
+    // 条 38 八键终案。三段键写成 `shield` 类别下的点号属性名：Forge 会把类别名
+    // 转小写（Configuration:1146-1149），嵌套类别会把 `ancientMetal` 打成
+    // `ancientmetal`；属性名不做该转换，键面才与裁定逐字一致。
+    /**
+     * 铜盾减伤百分比（<b>provenance (b) 自创</b>：R196 无盾，全套曲线无一手可
+     * 对位值，用户已拍板）。整数百分比，{@code ETIMExtraContent} 读出后
+     * {@code / 100.0F} 并 clamp 0~1 再进构造器（条 29.4）。
+     *
+     * <p>Copper shield blocked percentage — provenance (b), no R196 counterpart.</p>
+     */
+    public static int shieldCopperReduction = 55;
+
+    /** 银盾物理面减伤百分比（provenance (b)；幽魂面见下一键，绝对值不随本键漂移
+     *  ——D-7）。Silver physical-face blocked percentage (provenance (b)). */
+    public static int shieldSilverReduction = 40;
+
+    /** 远古金属盾减伤百分比（provenance (b)）。Ancient metal shield blocked
+     *  percentage (provenance (b)). */
+    public static int shieldAncientMetalReduction = 65;
+
+    /** 秘银盾减伤百分比（provenance (b)）。Mithril shield blocked percentage
+     *  (provenance (b)). */
+    public static int shieldMithrilReduction = 75;
+
+    /** 艾德曼盾减伤百分比（provenance (b)）。Adamantium shield blocked
+     *  percentage (provenance (b)). */
+    public static int shieldAdamantiumReduction = 80;
+
+    /**
+     * 银盾幽魂面减伤百分比（<b>绝对值</b>；D-7：0.65 不是「物理值 + 0.25」，
+     * 改 {@code shield.silver.reduction} 不会带着本键漂移）。provenance (b)：
+     * R196 只有「攻击者持银」的语义相反位（C-2），被攻侧差分是自创。
+     *
+     * <p>Silver ghost-face blocked percentage — ABSOLUTE (D-7), provenance (b).</p>
+     */
+    public static int shieldSilverSpectralReduction = 65;
+
+    /** 银盾物理面磨损乘子（相对主 mod 全局基准 {@code shieldWearRateBase} = 2.5；
+     *  provenance (b)）。Silver physical-face wear multiplier (provenance (b)). */
+    public static float shieldSilverWear = 1.4F;
+
+    /** 银盾幽魂面磨损乘子（同上；provenance (b)）。Silver ghost-face wear
+     *  multiplier. 非银四盾不设 wear 键——乘子恒 1.0 字面常数，不做死键（D31-2）。 */
+    public static float shieldSilverSpectralWear = 0.5F;
 
     private ETIMExtraConfig() {
     }
@@ -88,24 +133,43 @@ public final class ETIMExtraConfig {
                 "Dev judgement channel [ExtraLog] for the shield rows (off = rows return"
                         + " immediately, zero effect on values)");
         shieldCopperDurability = config.getInt("copperDurability", "shield", shieldCopperDurability, 1, 1 << 20,
-                "Copper shield max damage; DERIVED = 4.0 x 1 x 4.0 x 100 (R196 ItemTool.java:36-42"
-                        + " + ETIMMetals.COPPER, ETIMMetals.java:37; components=1 by ruling T-1)."
-                        + " NOT an R196 shield value");
+                "Copper shield max damage; final balance value (ShieldNerf batch, provenance (b)) -"
+                        + " the 1600 base of the x2/x4/x8 ladder; NOT the retired R196 tool formula");
         shieldSilverDurability = config.getInt("silverDurability", "shield", shieldSilverDurability, 1, 1 << 20,
-                "Silver shield max damage; DERIVED = 4.0 x 1 x 4.0 x 100 (ETIMMetals.java:38)."
-                        + " NOT an R196 shield value");
+                "Silver shield max damage; final balance value (provenance (b)), same 1600 tier as copper");
         shieldAncientMetalDurability = config.getInt("ancientMetalDurability", "shield",
                 shieldAncientMetalDurability, 1, 1 << 20,
-                "Ancient metal shield max damage; DERIVED = 4.0 x 1 x 16.0 x 100 (ETIMMetals.java:39)."
-                        + " NOT an R196 shield value");
+                "Ancient metal shield max damage; final balance value (provenance (b)) = copper 1600 x2 = 3200;"
+                        + " NOT the retired R196 tool formula");
         shieldMithrilDurability = config.getInt("mithrilDurability", "shield", shieldMithrilDurability, 1, 1 << 20,
-                "Mithril shield max damage; DERIVED = 4.0 x 1 x 64.0 x 100 (R196 ItemTool.java:36-42"
-                        + " + EnumEquipmentMaterial.java:14; components=1 by ruling T-1)."
-                        + " NOT an R196 shield value");
+                "Mithril shield max damage; final balance value (provenance (b)) = copper 1600 x4 = 6400;"
+                        + " NOT the retired R196 tool formula");
         shieldAdamantiumDurability = config.getInt("adamantiumDurability", "shield", shieldAdamantiumDurability,
                 1, 1 << 20,
-                "Adamantium shield max damage; DERIVED = 4.0 x 1 x 256.0 x 100 (:15)."
-                        + " NOT an R196 shield value");
+                "Adamantium shield max damage; final balance value (provenance (b)) = copper 1600 x8 = 12800;"
+                        + " NOT the retired R196 tool formula");
+        shieldCopperReduction = config.getInt("copper.reduction", "shield", shieldCopperReduction, 0, 100,
+                "Copper shield blocked percent (applied before armor); provenance (b) - R196 has no shields");
+        shieldSilverReduction = config.getInt("silver.reduction", "shield", shieldSilverReduction, 0, 100,
+                "Silver shield blocked percent on the physical face; provenance (b)");
+        shieldSilverSpectralReduction = config.getInt("silver.spectralReduction", "shield",
+                shieldSilverSpectralReduction, 0, 100,
+                "Silver shield blocked percent on the ghost face - ABSOLUTE (D-7), it does NOT follow"
+                        + " silver.reduction; provenance (b)");
+        shieldAncientMetalReduction = config.getInt("ancientMetal.reduction", "shield",
+                shieldAncientMetalReduction, 0, 100,
+                "Ancient metal shield blocked percent; provenance (b)");
+        shieldMithrilReduction = config.getInt("mithril.reduction", "shield", shieldMithrilReduction, 0, 100,
+                "Mithril shield blocked percent; provenance (b)");
+        shieldAdamantiumReduction = config.getInt("adamantium.reduction", "shield", shieldAdamantiumReduction,
+                0, 100, "Adamantium shield blocked percent; provenance (b)");
+        shieldSilverWear = config.getFloat("silver.wear", "shield", shieldSilverWear, 0.0F, 100.0F,
+                "Silver shield wear multiplier on the physical face, against the main mod's"
+                        + " shieldWearRateBase 2.5; provenance (b)");
+        shieldSilverSpectralWear = config.getFloat("silver.spectralWear", "shield",
+                shieldSilverSpectralWear, 0.0F, 100.0F,
+                "Silver shield wear multiplier on the ghost face; provenance (b). The other four shields"
+                        + " have no wear key - their multiplier is the literal 1.0");
         if (config.hasChanged()) {
             config.save();
         }

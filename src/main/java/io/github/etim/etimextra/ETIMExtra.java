@@ -17,10 +17,11 @@ import io.github.etim.etimextra.shield.ETIMExtraContent;
  * adamantium, one shield per ingot-bearing R196 material.
  *
  * <p>Scope of the add-on: the main mod owns the shield <em>mechanism</em>
- * (AD-10+SH: 1.12's full-free shield segment is closed and every
- * {@code Item#isShield} carrier is halved through the R196 reduction chain,
- * worn at {@code (int)(blocked × shieldWearRate)}). This mod owns the shield
- * <em>items</em>; it never re-derives the halving or the wear.</p>
+ * (ShieldNerf batch: the three-arm dispatch — {@code ETIMShield} first, vanilla
+ * {@code ItemShield} / wood constant 0.5 second — plus the 1.0 floor and the
+ * wear {@code (int)Math.floor(blocked × 2.5 × mult + 1e-4)}). This mod owns the
+ * shield <em>values</em>: the five reduction curves, the silver ghost face and
+ * the wear multipliers ({@code ETIMShield}); it never re-derives the arithmetic.</p>
  *
  * <p>Runtime order: {@code required-after:etim} — the add-on registers nothing
  * before the main mod's {@code preInit} has run.</p>
@@ -29,10 +30,11 @@ import io.github.etim.etimextra.shield.ETIMExtraContent;
  * <a href="https://github.com/GreatCoffee/ETIM">Easy Times In Minecraft (etim)</a>
  * 的附属，承载铜盾、银盾、远古金属盾、秘银盾与艾德曼盾。</p>
  *
- * <p>分工：盾的<em>机制</em>归主 mod（AD-10+SH：1.12 盾的全免段已关闭，任何
- * {@code Item#isShield} 载体在 LivingHurtEvent 上走 R196 减算链减半，磨损为
- * {@code (int)(blocked × shieldWearRate)}）。本 mod 只持盾<em>物品</em>，不重导
- * 减半与磨损。</p>
+ * <p>分工：盾的<em>机制</em>归主 mod（削弱批三支分发：{@code ETIMShield} 先于
+ * vanilla {@code ItemShield}／木盾常量 0.5；1.0 下限与磨损
+ * {@code (int)Math.floor(blocked × 2.5 × mult + 1e-4)} 也在主 mod）。本 mod 只持
+ * 盾<em>数值</em>：五条减伤曲线、银盾幽魂面与磨损乘子（{@code ETIMShield}），
+ * 不重导任何算式。</p>
  *
  * <p>运行期顺序：{@code required-after:etim}——主 mod 的 {@code preInit} 跑完之前
  * 本附属不注册任何东西。</p>
