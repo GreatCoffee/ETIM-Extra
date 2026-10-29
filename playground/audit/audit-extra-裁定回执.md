@@ -411,3 +411,26 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
   - **测试口前置条件（W-16 起窗必查）**：`etimghost` 注册在 `devTools` 门后（`ETIMConfig.devTools`），窗内须为 **true**；`src=` 判键为 `etimspectral`，不接受 `src=mob`。
 - **依赖序不变**：正式派修 + `ETIMShield`／`ETIMGhost` 同批 `publishToMavenLocal` + 回传 commit／钉值 → 我方编译对照 → 落码 → W-16。
 - **钉值**：本机 jar **30,285 B／`7D3F04F1…D4EE4D`／`c66c099`** 未动，0 rebuild；工作区在本条前干净。
+
+## 条 32 · 会话六第 2 轮修讫：授权提交 `3fd0d1b` + 6 项复核 + 3 项残留（2026-10-29）
+
+- **来源**：会话六「6 项文档级缺陷修讫 + 两条落码口径答复（未 commit，等授权）」，用户中转。其请求：只 add 两件、不 `-A`、不动主 mod 树，按给定 message 提交。
+- **授权与提交（本会话执行）**：`git add -- <两件>`（**逐路径**，未 `-A`）→ commit **`3fd0d1b`**（parent `f53e04d`，message 与请求逐字一致）→ 推送 `f53e04d..3fd0d1b`；`git show --name-status` **仅两路径**；提交时**无其它暂存/未暂存改动**；主 mod 树未触。
+- **两件复核（不采信转述，逐项实测）**：
+  - 摸底 **69,064 B**／**638 行**／SHA-256 `159AA07EB29DF9C010FE1A31F72C345FE1264E37E4226C4BC67F5145B1000566`；相对 `1890f63` **+28／−29**。
+  - 报告 **40,571 B**／**559 行**／SHA-256 `9512CA850E2B5A93EB69B0FA1D1BE89D01A317575E1CC7AC670CC4AA2D263F0B`；相对 `1890f63` **+36／−18**。
+  - 两件 UTF-8 无 BOM（首字节 0x23）、LF（CR=0）、**0 U+FFFD**、**0 行尾空白**。字节数／行数／SHA／增删行**与其自报逐位相同**。
+- **6 项处置逐条核讫**：
+  1. 摸底 `shieldBaseWearRate` **0 残留**、`shieldWearRateBase` **8 处**；报告 `shieldBaseWearRate` 仅 1 处且位于「缺陷自查表」描述句，**非活键**。
+  2. `shield.wearRate` **活键已删**；报告 3 处提及均为删除说明／B-10 行「不再设」，且新增「附属不设基准磨率键」一句。
+  3. 「8 键」自洽：曲线 5 + `silver.spectralReduction` 1 + 银盾乘子 2；右侧另列 3 个耐久改值（不计入 8 键）。
+  4. §2.1 已改**绝对** `spectralReduction`，`getBlockReduction` = `isSpectral ? spectralReduction : reduction`；D-7 登记于 §9-9 与档尾回执（落法级、已定）。
+  5. §1.2 已钉 `boolean markSpectral` + `Collections.synchronizedSet`；语义写死 true = 现已上标（幂等恒 true）、false = 仅类型门；实现 `SPECTRAL.add(src); return true;`（不用 `Set.add` 返回值）。
+  6. §7.2 补 **B-10** 行；B 级计数 **9 → 10** 三处同步（§7.2 标题、§9-8、档尾回执）。
+- **自查追加 2 项核讫**：⑦ epsilon 口径统一为「落码式 2 格（铜 8 伤 9.0／艾德曼 8 伤 4.0），全 float 乘 1 格，`+1e-4` 两种算序均 21/21」，摸底 §2.7／§3.1／§4.2 A-2／§九 9.2·9.4／档尾已同步；⑧ 摸底 `ETIMSpectral.isSpectral` **0 残留**，`ETIMGhost.isSpectral` 4 处。
+- **我方复算 W-16 判面（7 行 × 2 列，与会话六复核一致）**：铜 0.450／2.500／1.000 → 9,2｜银物 0.600／3.500／1.400 → 16,3｜银幽 0.350／1.250／0.500 → 3,1｜远古 → 7,2｜秘银 → 5,2｜艾德曼 → 4,2｜木 → 10,2。`devTools` 缺省 **true**（`ETIMConfig.java:442`）⇒ 起窗前无需改 cfg（除非本地 cfg 覆盖过）。
+- **3 项残留（C 级，不阻塞落码；我方落地按 条 31／本条判面，不按残留形态）**：
+  1. 报告 §2.1 伪码**缺** `private final float wearMultiplier;` 字段声明（文字列了四参，代码块只声明 3 个字段，`getWearMultiplier` 内 `this.wearMultiplier` 悬空）——我方实现会声明，不影响行为。
+  2. 摸底 §3 判行表仍是**旧形态**（`block … curve=<r> mult=<m>`、`src=mob`；`curve=` 5 处、`src=mob` 2 处），与 §1.4 定稿（`factor=retained`、无 `curve`、`min=`；`wear` 有 `rate`/`mult`/`decay`）不一致——W-16 判行以报告 §1.4／本条为准。
+  3. 报告 1 处 `shieldBaseWearRate` 为自查表内**描述性引用**，不作活键读。
+- **钉值**：jar **30,285 B／`7D3F04F1AF648EE4E7C2EE273DA3599BC17A864D8FA9DF4D5575800476D4EE4D`／mtime 2026-10-28 22:28:28**／产品码 `c66c099` **未动**，0 rebuild（两件均 `.md`）。
