@@ -317,3 +317,26 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **依赖顺序（硬约束，已写进回执）**：接口落码后须在**同一次** `publishToMavenLocal` 发 dev jar 并告知 commit/钉值，否则我方编译期无 `ETIMShield`。
 - **未来影响登记**：切换点 = 我方 items implements 接口那次（此前落「其余现行路径」÷2，不会被打断）；届时 W-15 旧证据（8→4、地板 1.0、磨损 = blocked）失效，需新窗 **W-16 起**；`README.md` §3／§5／§11 同步改；旧钉值 `30,285 B／7D3F04F1…／c66c099` 继续绑定旧证据。
 - **钉值**：本机 jar **30,285 B／`7D3F04F1AF648EE4E7C2EE273DA3599BC17A864D8FA9DF4D5575800476D4EE4D`** 未动。
+
+## 条 28 · 削弱批四点钉死 + 条 27 耐久说法作废（仍未落码，2026-10-29）
+
+- **来源**：主 mod 主会话「盾面削弱批 · 四点钉死回执（仍未落码）」，用户中转。**我方仍零落码、零 action**。
+- **纠偏（条 27 §2 第 2 点作废）**：条 27 写「耐久与附魔度不动」——**耐久半句是错的**（当时照抄知会未核终裁）。按 user 2026-10-29 终裁：**远古金属 6,400→3,200｜秘银 25,600→6,400｜艾德曼 102,400→12,800**；铜／银 **1,600 不动**（原版木盾 **336** 不属我方）；附魔度 **30／30／40／100／40 不动**。**本账本 append-only，条 27 原文不回改**，以本条为准（主会话要求的「改记」以勘误条方式落实）。
+- **终表（钉死）**：
+
+| 盾 | 耐久 | 物理减伤 | 幽魂减伤 |
+|---|---|---|---|
+| 木盾（原版） | 336 | 50% | 50% |
+| 铜盾 | 1,600 | **55%** | 55% |
+| 银盾 | 1,600 | **40%** | **65%**（=40+25，仅银有差分） |
+| 远古金属盾 | **3,200** | **65%** | 65% |
+| 秘银盾 | **6,400** | **75%** | 75% |
+| 艾德曼盾 | **12,800** | **80%** | 80% |
+
+  任何盾幽魂面 ≤ 80%，无 85%+ 档；1.0 地板保留（R196/1.6.4 语义）。
+- **磨率**：主 mod 全局 `shieldWearRate` 缺省 **1.0→2.5**（**替换**、非叠加）；五件倍数 木 1.0／铜 1.0／银 物理 1.4、幽魂 0.5／远古 1.0／秘银 1.0／艾德曼 1.0；最终磨损 `(int)(blocked × 2.5 × 倍数)`。**M-2a**：保留 `(int)` 截断；银盾幽魂 969 vs 名义 832 的 +17% 超闭合为取整台阶固有，用户裁定接受，W-16 判行以 **969** 为准。
+- **接口签名（钉死）**：`ETIMShield` 两个 default——`default float getBlockReduction(DamageSource source) { return 0.5F; }`、`default float getWearMultiplier(DamageSource source) { return 1.0F; }`；`isSpectral` 挂 **DamageSource 侧**（本体增益位，镜像 R196 `hasSilverAspect:213-223` 读法），接口不承载；`Item#isShield` 语义不变（附魔台／铁砧／stat／配方全保留），`ETIMShield` 为正交面。
+- **依赖顺序**：主 mod 同批 `publishToMavenLocal` 并发回 commit + jar 钉值；我方收到后才落码，不猜工件。
+- **本条核验（不采信转述）**：主 mod 源码**仍无** `ETIMShield` / `isSpectral`（HEAD `7a26c6f`）；现行 `ETIMBlocking.onLivingHurt` 的 `blocked` 变量实为**净伤害**（`max(raw×blockDamageFactor, blockMinDamage)`，`ETIMBlocking.java:125-129`），磨损 `(int)(blocked × shieldWearRate)`（`:144`）——即新公式的 `blocked` 应读作「格挡后净伤害」。我方现行 config 默认仍为旧值（6400／25600／102400），**新耐久属下一批，未落码**，故 README 暂不改。
+- **落码前待补齐/确认（6 条，已发回执）**：①【阻塞】幽魂读取的 public API（类名+方法签名）——银盾要在 `getBlockReduction(source)` 内分 40/65、`getWearMultiplier` 内分 1.4/0.5；②耐久新值的 provenance（终裁无公式 ／ 以铜 1,600 为基 ×2/×4/×8）；③`[BlockLog]` 是否加 `spectral=` 字段、`wear … rate=` 打总倍率还是拆字段；④config 键粒度（我方拟 `shield.<metal>.reduction`／`shield.silver.spectralReduction`／`shield.<metal>.wear`＋银盾两键）；⑤既有 `run/config/etimextra.cfg` 不随默认值改写——document-only 还是迁移；⑥公式顺序复核（`net=max(1.0, raw×(1−r))`、`wear=(int)(net×2.5×mult)`）。
+- **钉值**：本机 jar **30,285 B／`7D3F04F1…D4EE4D`／`c66c099`** 未动，0 rebuild。
