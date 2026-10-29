@@ -434,3 +434,21 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
   2. 摸底 §3 判行表仍是**旧形态**（`block … curve=<r> mult=<m>`、`src=mob`；`curve=` 5 处、`src=mob` 2 处），与 §1.4 定稿（`factor=retained`、无 `curve`、`min=`；`wear` 有 `rate`/`mult`/`decay`）不一致——W-16 判行以报告 §1.4／本条为准。
   3. 报告 1 处 `shieldBaseWearRate` 为自查表内**描述性引用**，不作活键读。
 - **钉值**：jar **30,285 B／`7D3F04F1AF648EE4E7C2EE273DA3599BC17A864D8FA9DF4D5575800476D4EE4D`／mtime 2026-10-28 22:28:28**／产品码 `c66c099` **未动**，0 rebuild（两件均 `.md`）。
+
+## 条 33 · 会话六第 3 轮残修：授权提交 `4dff3b9` + 三种行形定稿 + probe 编译点核讫（2026-10-29）
+
+- **来源**：会话六「第 3 轮残修（3 项残留：2 修 1 不改）+ 自查再补 1 处编译点」，用户中转；请求按给定命令只 add 两件提交。
+- **授权与提交（本会话执行）**：逐路径 `git add --`（未 `-A`）→ commit **`4dff3b9`**（parent `6d8184d`，message 与请求逐字一致，含中文破折号与括号）→ 推送 `6d8184d..4dff3b9`；`git show --name-status` **仅两路径**；提交瞬间无其它改动；主 mod 树未触。
+- **两件机械核（与其自报逐位相同）**：摸底 **69,593 B**／**637 行**／SHA-256 `DEBA7FAB5210CF79EDCBF81E916C6675EE0DD3F5E58F827C1CBCD010408BB43A`／**+9−10**；报告 **41,200 B**／**562 行**／SHA-256 `FCE21D713C4508B2C6DDA7A4781E4DDEFCCAC7EC8B698A87E77623EFFBC9F878`／**+4−1**；两件 UTF-8 无 BOM、LF、0 U+FFFD、0 行尾空白。
+- **3 项残留处置核讫**：
+  1. `private final float wearMultiplier;` **已补**（报告 §2.1 第 4 行，注释 1.0（木/铜/远古/秘银/艾德曼）／1.4（银·物理））⇒ P1 照抄即编译失败的点已消除。
+  2. 摸底 §3 判行表**已对齐**：W-16 行 `factor=0.450 spectral=false min=1.000`（去 `curve=`、`src=<src>` 占位）；W-18 加 `mult=1.000`；W-19 改 `etimghost hurt … spectral:false/true` 两腿（`rate=3.500 mult=1.400` / `rate=1.250 mult=0.500`，`wear 16／3`）；W-21 判「盾行 `decay=na` / 工具行 `decay=` 有数字」；W-22 按 `shield.copper.reduction`→60 演示（`blocked=3.200 factor=0.400`）。现存 `curve=` **2 处**均为散文（「不得追加 `curve=`」「不写 `curve=`」），`src=mob` **1 处**为负例说明。
+  3. 报告 1 处 `shieldBaseWearRate` **保留**（§10 修订记录内描述「摸底曾有 6 处旧名」）——采纳其理由：删了会失真；已确认全文无活键。
+- **自查新增编译点核讫（P1，主 mod 侧）**：`ETIMBlockLog.probeConfig`（`:141-145`）第 6 改点读 `ETIMConfig.shieldWearRate`，A-1 改名后**该字段不存在 ⇒ 不改必编译失败**；报告 §1.4 原只列 block／wear 两行，确为洞。现已：§1.4 标题「改两行」→「**改三行**」、新增 `probe`（config 臂）行 `shieldRateBase=f3(ETIMConfig.shieldWearRateBase)` + 追加 `woodReduction=f3(ETIMConfig.shieldWoodReduction)`、§10 修订记录第 8 行留痕。与本会话 条 31 引的 N-7「6 处全改」口径一致（probe 即第 6 处）。
+- **行形定稿（四种，落码与 W-16 判行照此，旧表作废）**：
+  - `block`：`block player=<n>#<id> src=<type> raw=8.000 blocked=3.600 factor=0.450 spectral=false min=1.000 carrier=etimextra:copper_shield`
+  - `wear` 盾行：`wear player=<n>#<id> item=… rate=2.500 mult=1.000 decay=na raw=8.000 blocked=3.600 wear=9 dur=0->9`
+  - `wear` 工具行：`wear … rate=na mult=na decay=50 raw=… blocked=… wear=… dur=…`
+  - `probe` config 臂：`probe player=<n> cfg blockModel=… factor=0.500 min=1.000 shieldRateBase=2.500 woodReduction=0.500`
+  - 要点：`factor` = 保留系数（1−r）；`rate` = 有效总率（2.5×mult）；盾行 `decay=na`、工具行 `rate=na mult=na`；**全文无 `curve=`**。
+- **钉值**：jar **30,285 B／`7D3F04F1…D4EE4D`／mtime 2026-10-28 22:28:28**／`c66c099` **未动**，0 rebuild。阻塞 0；等待项 = 正式派修 + `ETIMShield`／`ETIMGhost` 同批 mavenLocal + 接口 jar 钉值。
