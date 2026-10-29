@@ -162,7 +162,7 @@ All five shields closed the original chain (W-1…W-15). The shield-nerf batch i
 | jar | `build/libs/etimextra-0.1.0.jar`，31,614 B |
 | SHA-256 | `2D42D78AE475E2261C9071B980322570EC7003FC86961771CF32D8374C847A98` |
 | mtime | 2026-10-29 13:40:06 |
-| 产品码 commit / product commit | 落码提交（见账本 条 40 / see ledger entry 40） |
+| 产品码 commit / product commit | `d0bfd5c`（落码提交；账本 条 40 / landing commit） |
 | 重建 / rebuild | 1（本批落码；W-16 窗内 0 重建）/ 1 (this landing; 0 rebuild inside the W-16 window) |
 
 钉值快照日期为 2026-10-29。账本是 `playground/audit/audit-extra-裁定回执.md`（append-only，条 1 起；盾批闭单与交接为条 1–24，盾面削弱批为条 25 起）；回执目录是 `testharness/reports/`，含五份原批 `extra-shield-*-verdict.md` 与削弱批 `extra-shield-nerf-w16-verdict.md`。

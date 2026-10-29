@@ -560,3 +560,20 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **本轮实测对齐**：W-16 七腿 × 两臂全 PASS（铜 3.600/0.450/9·2；银物 4.800/0.600/3.500/1.400/16·3；银幽 2.800/0.350/1.250/0.500/3·1；远古 2.800/0.350/7·2；秘银 2.000/0.250/5·2；艾德曼 1.600/0.200/4·2；木 4.000/0.500/10·2），三处差异全部按上列判点执行；回执见 `testharness/reports/extra-shield-nerf-w16-verdict.md`。
 - **钉值**：本条只记文档提交；附属 jar 钉值随落码提交另记（下一条）。
 - **状态**：会话六侧两件映射文档**不再改动**（仅 ① 派修单要求补文档 ② 落码后判「文档与实现不符」 ③ 终审重开 三情形例外）；我方继续落码提交 → W-16 回执 → 下一轮。
+
+## 条 40 · 盾面削弱批落码条 + jar 钉值 + W-16 七腿全 PASS（2026-10-29）
+
+- **落码提交**：`d0bfd5c`（parent `234f803`，7 路径：4 个 `src` + README + W-16 驱动 + W-16 回执）。
+- **落码内容（= 条 37 派修本要件 1-3）**：
+  - `shield/ETIMExtraItemShield` → **`implements ETIMShield`** + 4 个取值字段 `reduction` / `spectralReduction` / `wearMultiplier` / `spectralWearMult`；`getBlockReduction` / `getWearMultiplier` 两面分派只经 `ETIMGhost.isSpectral(source)`（D-7 绝对值，不做物理值加成）；`isShield` 仍恒 `true`（C-4 不变）。
+  - `shield/ETIMExtraContent` → 注册时传四值；百分比换算 `percent(v) = clamp(v / 100.0F, 0..1)`（条 29.4；clamp 落在此处，构造器只收 0..1）。
+  - `ETIMExtraConfig` → **8 键**（五盾 `reduction` 55/40/65/75/80 + `silver.spectralReduction` 65 + `silver.wear` 1.4 + `silver.spectralWear` 0.5），三段键写成 `shield` 类别下的点号属性名（Forge 会小写类别名，`Configuration:1146-1149`，嵌套会把 `ancientMetal` 打成 `ancientmetal`；属性名不受该转换）；非银四盾**不设** `wear` 键（1.0 字面常数，D31-2）；耐久默认值改 **远古 3,200 / 秘银 6,400 / 艾德曼 12,800**（铜 1,600 为基 ×2/×4/×8，provenance (b)），旧「DERIVED = 4.0 × 1 × d × 100」注释与 javadoc 四段（`ETIMExtraItemShield:38-45`/`:60-61`、`ETIMExtra:22`/`:34`）同批改写为终裁值与 (b) 声明。
+  - 迁移 = **document-only**：`run/config/etimextra.cfg` 已删、由新代码重生成（8 键 + 5 耐久键逐字在位，见 `run/config/etimextra.cfg`），无迁移代码。
+- **jar 钉值（本批 rebuild 1）**：`build/libs/etimextra-0.1.0.jar` **31,614 B｜SHA-256 `2D42D78AE475E2261C9071B980322570EC7003FC86961771CF32D8374C847A98`｜mtime 2026-10-29 13:40:06**；`compileJava` 对 mavenLocal `io.github.etim:etim:1.0.0:dev`（**750,801 B｜`7998673BB60B7ADDA332709F947426CCC665FEE46D25B42860BC4C61C7E63BA7`**，主侧 `c7672f2` + `03bbeff` 同批发布）零错通过；`javap` 复核 `ETIMExtraItemShield implements ETIMShield` 且两方法签名在册。
+- **W-16 结果（L0 全表）**：七腿 × 两臂 **PASS**，14/14 行逐格对表——铜 3.600/0.450/9·2；银物 4.800/0.600/3.500/1.400/16·3；银幽 2.800/0.350/1.250/0.500/3·1；远古 2.800/0.350/7·2；秘银 2.000/0.250/5·2；艾德曼 1.600/0.200/4·2；木 4.000/0.500/10·2。**A-2 边界两格全对**：铜 raw=8 → **9**、艾德曼 raw=8 → **4**（8/3 未出现 ⇒ epsilon 未漏）。回执 `testharness/reports/extra-shield-nerf-w16-verdict.md`。
+- **窗内口径**：`factor` 只判 raw=8 臂（C-38-3），raw=1 臂只判 `blocked=1.000` + `wear`/`rate`/`mult`；`shield=` 超集字段按附加字段忽略；行序只判「相邻」不判先后（`1cbaedb` 定稿）；不判击数（B-5）；类型门拒绝行无命令入口、按设计登记。
+- **L3**：全列标「**未实测（依赖耐久附魔面统一批）**」，未标「不通过」；969 / 2,327 / 5,818 仍为预测值、不入判据（A-3/D-2）。
+- **冲突**：A 0 / B 0 / C 3（行序 wear 先 / `shield=` 超集 / `factor=blocked÷raw` 地板打 1.000），三条均已由 条 39 + 报告 `1cbaedb` 在册，无新增。
+- **产物面**：W-16 证据在 `testharness/build-logs/`（git 忽略）；窗内 `etim.cfg` 按字节还原、SHA `BD37A2BF…D8CB85` 与窗前逐字节相同；0 crash-report；端口 25565 = 0。
+- **README**：§2 表加「减伤（物理／幽魂）」列、§3 改三支分发与磨损式、§4 改终裁值与 (b)（旧派生式与因子表删除）、§9 配置表 13 键、§10 补 `[BlockLog]` 判据面、§11 钉值换新并记 W-16。
+- **下一环**：W-17…W-23（同批验证窗）→ 判决回执；若判「实现与文档不符」按三情形回本 C 级补。
