@@ -340,3 +340,29 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **本条核验（不采信转述）**：主 mod 源码**仍无** `ETIMShield` / `isSpectral`（HEAD `7a26c6f`）；现行 `ETIMBlocking.onLivingHurt` 的 `blocked` 变量实为**净伤害**（`max(raw×blockDamageFactor, blockMinDamage)`，`ETIMBlocking.java:125-129`），磨损 `(int)(blocked × shieldWearRate)`（`:144`）——即新公式的 `blocked` 应读作「格挡后净伤害」。我方现行 config 默认仍为旧值（6400／25600／102400），**新耐久属下一批，未落码**，故 README 暂不改。
 - **落码前待补齐/确认（6 条，已发回执）**：①【阻塞】幽魂读取的 public API（类名+方法签名）——银盾要在 `getBlockReduction(source)` 内分 40/65、`getWearMultiplier` 内分 1.4/0.5；②耐久新值的 provenance（终裁无公式 ／ 以铜 1,600 为基 ×2/×4/×8）；③`[BlockLog]` 是否加 `spectral=` 字段、`wear … rate=` 打总倍率还是拆字段；④config 键粒度（我方拟 `shield.<metal>.reduction`／`shield.silver.spectralReduction`／`shield.<metal>.wear`＋银盾两键）；⑤既有 `run/config/etimextra.cfg` 不随默认值改写——document-only 还是迁移；⑥公式顺序复核（`net=max(1.0, raw×(1−r))`、`wear=(int)(net×2.5×mult)`）。
 - **钉值**：本机 jar **30,285 B／`7D3F04F1…D4EE4D`／`c66c099`** 未动，0 rebuild。
+
+## 条 29 · 削弱批六项闭合 + 契约快照 + W-16 预登记（仍未落码，2026-10-29）
+
+- **来源**：主 mod 主会话「落码前六项闭合回执」，用户中转。**我方仍零落码、零 action**；主 mod 源码实测仍无 `ETIMShield` / `ETIMGhost`（HEAD `7a26c6f`）。
+- **六项闭合（照录为契约）**：
+  1. **幽魂读取口（原阻塞项）**：新增 `io.github.etim.etim.combat.ETIMGhost`——`markSpectral(DamageSource)` / `isSpectral(DamageSource)`，内部 `Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()))`；与 `ETIMShield` 同 commit 进 mavenLocal。我方两个方法体只依赖 `isSpectral`。
+  2. **耐久 provenance = (b)**：以铜 1,600 为基 **×2／×4／×8** → 远古 **3,200**／秘银 **6,400**／艾德曼 **12,800**；铜基准仍可写一手公式 `4.0×1×d×100`（d=4）；**旧 T-1 工具尺公式对高端三件废止**。config 注释与 README 按此写。
+  3. **`[BlockLog]` 判据面**：`block` 行加 `spectral=true|false`；`wear` 行拆 `rate=2.5` 与 `mult=<盾倍数>` 两字段（不合并总倍率）。
+  4. **config 粒度（接受我方方案）**：`shield.<metal>.reduction`（整数百分比，`/100` 后 clamp 0~1）+ `shield.<metal>.wear`；银盾四键终值 **reduction=40 / spectralReduction=65 / wear=1.4 / spectralWear=0.5**。我方原 `spectralbonus.enabled` 开关方案作废。
+  5. **cfg 迁移 = document-only**：删 `run/config/etimextra.cfg` 重生成取新缺省，零迁移代码；README 加一行「cfg 勘误 = 删档重生」。
+  6. **公式顺序 = 我方读法正确**：`net = max(1.0, raw × (1 − r))`；`wear = (int)(net × 2.5 × mult)`；`blocked` 变量即净伤害（`ETIMBlocking.java:125-129,144`）。
+- **W-16 预登记（预测值，非证据；raw 取自现行 `etest hurt` 8 点臂与 1 点地板臂）**：
+
+| 盾 | r | raw=8 → net / wear | raw=1 → net / wear |
+|---|---|---|---|
+| 铜 | 0.55 | 3.6 / **9** | 1.0 / **2** |
+| 银（物理） | 0.40 | 4.8 / **16**（mult 1.4） | 1.0 / **3** |
+| 银（幽魂） | 0.65 | 2.8 / **3**（mult 0.5） | 1.0 / **1** |
+| 远古 | 0.65 | 2.8 / **7** | 1.0 / **2** |
+| 秘银 | 0.75 | 2.0 / **5** | 1.0 / **2** |
+| 艾德曼 | 0.80 | 1.6 / **4** | 1.0 / **2** |
+
+  （`wear` 均为 `(int)(net × 2.5 × mult)` 截断；raw=1 时全部触发 1.0 地板。此表仅用于窗内对差，若主 mod 实现算出不同值，应**落码前**纠正，不带进窗内才发现。）
+- **新增 1 项待补（不阻塞落码，阻塞 W-16 银盾幽魂腿）**：`ETIMGhost.markSpectral` 目前**没有调用方**（幽魂实体批未落），窗内无法自然产生 `spectral=true`。请在派修同批给出测试口——`etest hurtspec`（或 `etest hurt … spectral`）——或确认幽魂实体同批落地；否则 W-16 的银盾 65/0.5 腿只能标「未实测」。
+- **设计风险注记（C 级）**：`markSpectral` 若收到**静态单例** `DamageSource`（如 `DamageSource.magic` 一类），WeakSet 条目会被静态字段永久持有 ⇒ 该源后续所有攻击都带幽魂。请确保调用点只传逐次 `new` 的实例（他们口径如此，登记待核）。
+- **钉值**：本机 jar **30,285 B／`7D3F04F1…D4EE4D`／`c66c099`** 未动，0 rebuild。
