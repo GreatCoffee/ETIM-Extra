@@ -497,3 +497,33 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **冻结纪律**：两件文档（对照报告／立项摸底）**冻结**；仅在 ① 派修单要求补文档 ② 落码后判「文档与实现不符」（C 级勘误）③ 终审重开 三种情形下改动，且每次须**新开轮次 + §10 留痕**。
 - **引件只认这组钉值**：报告 `d524d41`／46,473 B／`316A00A0…5B154`；摸底 `bd40197`／69,721 B／`12213F2A…B7641059`；终审回执 `f67ed8f`／18,976 B／`C2654D55…CA79D`。
 - **钉值**：jar **30,285 B／`7D3F04F1AF648EE4E7C2EE273DA3599BC17A864D8FA9DF4D5575800476D4EE4D`／mtime 2026-10-28 22:28:28**／`c66c099` **未动**，0 rebuild。阻塞 0；等待项 = 正式派修 + `ETIMShield`／`ETIMGhost` 同批 mavenLocal + 接口 jar 钉值。
+
+## 条 37 · 正式派修收到（盾面削弱批，终审已放行）：三件落码面锁定 + 1 项措辞待核（未落码，2026-10-29）
+
+- **来源**：主会话 →「附属主会话」正式派修通知（终审已放行），用户中转。**本条 = 派修确认同步条**；我方仍零落码、零 action。
+- **终审对象对钉（不采信转述）**：通知称实审 = 会话六终态冻结版 `d524d41`／**46,473 B**／SHA-256 `316A00A0…6395B154`——与 条 36 引件钉值**逐位相同**（`316A00A00E4DDE112ACA07BF3858FFC84DAF7E0F8799A7EE6F69D9526395B154`）。
+- **主 mod 侧六件（本批落地，照录为契约面）**：
+  1. 新增 `combat/ETIMShield.java`（`getBlockReduction` / `getWearMultiplier`，default 0.5 / 1.0）；
+  2. 新增 `combat/ETIMGhost.java`（WeakSet 侧表 + 类型门只收 `EntityDamageSource` + `ghost-mark rejected` 行）；
+  3. 改 `combat/ETIMBlocking.java`：三支分发（① `instanceof ETIMShield` 先于 ② vanilla `ItemShield`）+ 盾两臂 `wear=(int)Math.floor(blocked*(double)rate+1.0E-4)`（铜 8 伤→9、艾德曼 8 伤→4；工具臂 `(int)(blocked*decay)` 一字不动）；
+  4. 改 `combat/ETIMBlockLog.java` 三行（判行四形：`block`(factor/spectral/min)｜`wear` 盾(rate/mult/decay=na)｜`wear` 工具(rate/mult=na)｜`probe`(shieldRateBase/woodReduction)）；
+  5. 改 `ETIMConfig.java`（`shieldWearRateBase=2.5` / `shieldWoodReduction=0.5`，旧键不读；`shieldWearRate` 改名打全 9 处 = 码面 5 + 注释面 4）；
+  6. 新增 `commands/CommandEtimGhost.java` + `TestDriver.hurtSpectral` + `ETIM.java` 注册行。
+- **派修单必带三章（落点 = config 注释 / javadoc，非审计文档）**：
+  1. provenance (b) 自创面声明（B-审3）：(i) 全套减伤曲线；(ii) 银盾幽魂差分（R196 `hasSilverAspect` 是「攻击者持银」，本批是「攻击者是幽魂」）；(iii) 磨率体系；耐久三值同为 (b)。记法 = 铜盾 1,600 为基 **×2/×4/×8**；**旧 T-1 工具尺公式对高端三件废止**；R196 无盾 ⇒ 窗内不得以「R196 怎么写」为反对理由。
+  2. 数值换算句（条 29.4）：整数百分比存 config，`ETIMExtraContent` 读出 `/100.0F` + clamp 0~1 再进构造器。
+  3. D-7 绝对面：银盾幽魂 = **绝对** `spectralReduction = 0.65`（非「本盾值 + 0.25」相加派生），config 注释写死。
+- **我方三件（接口 jar 钉值回传后开工）**：
+  1. `ETIMExtraItemShield` `implements ETIMShield` + 4 字段（`reduction` / `spectralReduction` / `wearMultiplier` / `spectralWearMult`）；两方法体经 `ETIMGhost.isSpectral(source)` 分面：`getBlockReduction` 物理 40 / 幽魂 65，`getWearMultiplier` 物理 1.4 / 幽魂 0.5（**银盾**；其余四盾 1.0 及各自曲线值）；
+  2. `ETIMExtraContent` 传值 + `ETIMExtraConfig` **8 键** + 耐久三值改落（远古 3,200 / 秘银 6,400 / 艾德曼 12,800，provenance (b) 记法）；
+  3. B-审4 全清改：javadoc 四段（`ETIMExtraItemShield.java:38-45` / `:60-61` + `ETIMExtra.java:22` / `:34` 旧派生/旧率句删除）；config「DERIVED」注释改写为 (b) 记法；`run/config/etimextra.cfg` document-only 删档重生。
+- **W-16 口径（钉）**：只判 **L0**；判点判 `wear`/`rate`/`mult`，**不判击数**；银盾幽魂腿 `etimghost hurt … spectral=true` 双腿互证；**A-2 边界格必判**（铜 raw=8 → 9、艾德曼 raw=8 → 4；得 8 / 3 即 epsilon 漏加，判失败）；**L3 全列标「未实测（依赖耐久附魔面统一批）」，禁标不通过**。
+- **判面复核（与 条 31／条 33 定稿一致，无新增、无作废）**：`net = max(1.0, raw×(1−r))`；`wear = (int)Math.floor(net×2.5×mult + 1.0E-4)`；`factor` = 1−r（铜 0.450／银物 0.600／银幽 0.350／远古 0.350／秘银 0.250／艾德曼 0.200／木 0.500）；`rate` = 2.5×mult（2.500／3.500／1.250／2.500／2.500／2.500）；7 行 × 2 列预测表不变（9/2、16/3、3/1、7/2、5/2、4/2、10/2）。
+- **与冻结文档一致性（逐项核讫，两件文档不动）**：曲线五值、银盾绝对 65、银盾 wear 1.4 / spectralWear 0.5、磨率基准 2.5 + 逐盾乘子、epsilon 仅盾两臂、8 键组、耐久三值、判行四形、L3 不判——**全部与报告 `d524d41` / 摸底 `bd40197` 相同**。派修单**未要求补文档**（三章落点是 config/javadoc）⇒ 重开条件 ①②③ **均未触发**，两件**继续保持冻结**。
+- **1 项 C 级措辞待核（不阻塞落码）**：派修 §三.2 写「Config 8 键（盾面 reduction/wear 全盾 + 银盾 spectralReduction/spectralWear 四特殊键）」——「全盾 reduction/wear」字面 = 10 键，再加「四特殊键」= 14，与同句「**8 键**」不自洽，亦与 条 31 D31-2（附属**不设** `shield.wearRate`）／报告 §2.3 冲突。**我方按 8 键落**：`shield.{copper,silver,ancientMetal,mithril,adamantium}.reduction`（55/40/65/75/80）+ `shield.silver.spectralReduction`（65）+ `shield.silver.wear`（1.4）+ `shield.silver.spectralWear`（0.5）；**非银盾无 `wear` 键**（乘子恒 1.0，字面常数）。若主会话另有裁示，请在 jar 钉值回传时一并给出，否则按此执行。
+- **1 项变量名提醒（读法已定，不改）**：主 mod 侧 `wear` 式中的 `blocked` 变量即**净伤害**（`ETIMBlocking.java:125-129,144`，条 29.6 已核）；我方按 `net` 读，**不按 raw**。
+- **依赖序（要件 9）**：主 mod 六件 → 编译 → `publishEtimLocalPublicationToMavenLocal` **同批** → 回传 commit + jar 钉值（字节/SHA/mtime）→ 我方开工，**不猜工件**。
+- **本条落盘时实测现状（主 mod 树只读查证）**：HEAD 仍 **`7a26c6f`**；`combat\ETIMShield.java` / `combat\ETIMGhost.java` / `commands\CommandEtimGhost.java` **三者均不存在**；mavenLocal `etim-1.0.0-dev.jar` 仍 **746,954 B／2026-10-28 18:41:50**（上一批工件）⇒ **接口未到，我方零落码**。（主 mod 工作树另有 1 个未跟踪件 `testharness/pose/probe-tmp.js`，非我方产出，仅登记。）
+- **账目**：主账 条 116/117/118（对照报告／终审／派修 10 要件）由主会话声明已挂——主账在主 mod 仓，我方**只读不写**，未核原文。
+- **钉值**：本机 jar **30,285 B｜`7D3F04F1AF648EE4E7C2EE273DA3599BC17A864D8FA9DF4D5575800476D4EE4D`｜mtime 2026-10-28 22:28:28**／产品码 `c66c099` **未动**，0 rebuild。
+- **状态**：阻塞 0；等待项 = 接口 jar 钉值（`ETIMShield` + `ETIMGhost` 同批 mavenLocal）。收到后序：编译对照 → 落码三件 → rebuild + 冒烟 → W-16 → README §2/§3/§4/§5/§11 与重钉 → 账本记落码条 + jar 钉值。
