@@ -577,3 +577,18 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
 - **产物面**：W-16 证据在 `testharness/build-logs/`（git 忽略）；窗内 `etim.cfg` 按字节还原、SHA `BD37A2BF…D8CB85` 与窗前逐字节相同；0 crash-report；端口 25565 = 0。
 - **README**：§2 表加「减伤（物理／幽魂）」列、§3 改三支分发与磨损式、§4 改终裁值与 (b)（旧派生式与因子表删除）、§9 配置表 13 键、§10 补 `[BlockLog]` 判据面、§11 钉值换新并记 W-16。
 - **下一环**：W-17…W-23（同批验证窗）→ 判决回执；若判「实现与文档不符」按三情形回本 C 级补。
+
+## 条 41 · W-17…W-22 六窗判讫（全 PASS）+ W-23 未跑（2026-10-29）
+
+- **判据正本**：报告定稿 `1cbaedb` §2.9 判点表 + §1.4「落码实况」；L3 按 D-2/A-3 不判。
+- **窗**：A = W-16 窗（13:48:29–13:49:25，W-17/18/19 复用）；B = W-20/W-21（13:57:39–13:57:57）；C = W-22（13:58:44–13:59:22）。三窗 0 rebuild，jar 仍 **31,614 B｜`2D42D78A…7A98`｜13:40:06**，产品码 `d0bfd5c`。
+- **W-17 ✓**：七件 raw=1 全 `blocked=1.000`（未出现 0.800/0.200）；地板格 `factor=1.000` 是 `blocked/raw` 商、不作判点（判点钉仅在 raw=8 臂）。
+- **W-18 ✓**：`wear` 值 10/9/16/3/7/5/4 全对表；盾行 `decay=na`；`mult` 在位（1.000/1.400/0.500/1.000/1.000/1.000/1.000）；`dur` 增量 = wear；A-2 两格 铜 8→**9**、艾德曼 8→**4** 未漏 epsilon。
+- **W-19 ✓**：银盾同日两腿 `spectral=false/true` 互证——4.800/2.800、rate 3.500/1.250、mult 1.400/0.500、wear 16/3，`src=etimspectral` 全在案。
+- **W-20 ✓**：`probe` 分母 1,600 / 1,600 / 3,200 / 6,400 / 12,800 / 336（旧 6,400/25,600/102,400 未现）。
+- **W-21 ✓**：① 五盾 factor 0.450/0.600/0.350/0.350/0.250/0.200（≠0.500，未被木盾常量吃掉）；② 木盾 factor 0.500、rate 2.500、mult 1.000；③ 工具臂（`etim:sword_copper`）`block blocked=4.000 factor=0.500` + `wear rate=na mult=na decay=50 wear=200 dur=0->200`（剑臂一字未动、无 epsilon）。`probe … cfg` 六次同值：`blockModel=true factor=0.500 min=1.000 shieldRateBase=2.500 woodReduction=0.500`。
+- **W-22 ✓**：`shield.copper.reduction` 55→60 重启后铜盾 `blocked=3.200 factor=0.400 wear=8 dur=0->8`，raw=1 臂仍 `1.000/wear=2`（地板与磨率不随减伤漂移）；收口 `etimextra.cfg`（`0E6F1C44…9E6E5`）与 `etim.cfg`（`BD37A2BF…D8CB85`）逐字节还原。
+- **W-23 未跑（如实）**：判法要求「拔 Extra 后木盾行与装 Extra 逐位同值」。本工作区把附属挂在运行 classpath 上（`etim:1.0.0:dev` + 自身 `build/classes`），无卸载开关；在自有构建树里挪 class 属破坏性操作并污染 Gradle 增量状态，故未本地执行。**建议执行方 = 主 mod 工作区（无 etimextra 依赖）由会话七跑同一木盾腿**，与 W-16 木盾行（blocked=4.000 factor=0.500、rate=2.500 mult=1.000 wear=10）逐位比对；本条**不预填结论**。
+- **回执**：`testharness/reports/extra-shield-nerf-w17-w22-verdict.md`；驱动 `extra-shield-nerf-w20-w21.js`、`extra-shield-nerf-w22.js`（证据在 git 忽略的 `build-logs/`）。
+- **冲突**：A 0 / B 0 / C 2——① W-22 驱动首跑正则组号写错（carrier 取 `b[7]` 实为 `b[8]`）误报 FAIL，产品行本身正确（3.200/0.400/8 原样在），修正后 PASS；② `blockprobe` 每次出两行（`dur=` + `cfg`），判据只取前者、不按行序取首行。两条均为工装，产品码零改动。
+- **状态**：W-16…W-22 判讫；W-23 挂「待无 Extra 环境」；L3 维持「未实测」，禁标不通过。
