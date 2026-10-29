@@ -379,3 +379,35 @@ R196 **无盾物品**（待会话二负证坐实）→ 盾的全部数值无一�
   2. 自定义类型 `etimspectral` 在当前代码下**不被过滤**：`r196ArmorBypassed = isUnblockable() || isFireDamage()`、`isR196Absolute = isDamageAbsolute() || OUT_OF_WORLD`（`R196ArmorModel.java:349-361`）——只要测试源不设 bypass/absolute 位，`LivingHurtEvent` 会正常进盾链。
   3. W-16 判行将以 `src=etimspectral` 为键（不是 `src=mob`），并要求 `block … spectral=true|false` 与 `wear … rate=2.500 mult=…` 同屏互证。
 - **钉值**：本机 jar **30,285 B／`7D3F04F1…D4EE4D`／`c66c099`** 未动，0 rebuild；阻塞计数 0，等待项 = 正式派修 + 接口 jar 钉值。
+
+## 条 31 · 会话六提交登记核讫（1890f63 两件判据件）+ 6 项文档级缺陷登记（2026-10-29）
+
+- **来源**：会话六「提交登记」转发（用户中转）：在 ETIM-Extra 仓提交两件审计件（`git add` 指定两路径，未 `-A`），请核三点并记条。
+- **核点 1（提交事实，本会话实测）**：
+  - HEAD **`1890f63fd1c0834f0169198cd6400be6c7d8af4f`**；parent **`dd023ae`**；时间 **2026-10-29 11:39:32 +0800**；message 与转发逐字一致。
+  - `git show --name-status` **仅两路径**（M `盾面削弱批-立项摸底.md`、A `盾面削弱批-对照报告.md`），无第三路径；numstat `540+0` / `99+43` ⇒ **639 插入 / 43 删除**，与转发同数。
+  - 文件实测：摸底 **67,835 B**｜SHA-256 `8F6AFF72…87EF62E2`｜639 行；对照报告 **37,902 B**｜SHA-256 `9ABA181A…8E3813E4`｜541 行；两件均 UTF-8 无 BOM（首字节 0x23）、LF（CR=0）、**0 U+FFFD**、0 行尾空白。
+  - **但转发漏报一件**：`1890f63` 当时**只在本地**（`origin/master` = `dd023ae`）。按 commit 引用远端解析不到；本条落盘前已**快进推送**（零内容改动，`dd023ae..1890f63`），现远端可达。
+  - **「变更内容仅 §九」不成立**：diff 共 **14 处 hunk**，除 §九（9.1-5／9.1-7／9.1-8、A-1/D-2/D-3 标已裁）外，还动 §一.3 键表、§二 接口 default/命名、§四 伪代码、§五、§七 N-5；其中含全局改名 `shieldWearRate → shieldBaseWearRate`（6 处）、接口 default 改为 0.5/1.0、删 `silverSpectralBonus` 行等。**判值面（21 格／曲线／耐久／磨率）未改**，故「不影响 W-16 预登记表与现行五盾行为」成立，但「仅 §九」须以本条为准。
+- **核点 2（性质）**：两件均 `.md` 判据件；`src/`、`resources/`、`gradle/`、`README.md` **零改动**。本机 jar **30,285 B｜`7D3F04F1AF648EE4E7C2EE273DA3599BC17A864D8FA9DF4D5575800476D4EE4D`｜mtime 2026-10-28 22:28:28**、产品码 `c66c099` 未动 ⇒ **无需 rebuild**，钉值不变。
+- **核点 3（引用纪律）**：接受。引用对照报告一律 `commit 1890f63` + 上列 SHA-256，**不按工作树路径裸引**（工作树可变、commit 不可变）。
+- **6 项文档级缺陷（B 级，登记不改判值；第 1／2 项影响我方落码口径）**：
+
+| # | 缺陷 | 一手证据 | 处置建议 |
+|---|---|---|---|
+| **D31-1** | 主 mod 全局键名两写：摸底 6 处 `shieldBaseWearRate`、2 处 `shieldWearRateBase`；对照报告 9 处全为 `shieldWearRateBase` | 两件 grep 计数 | 钉 **`shieldWearRateBase`**（§9.1-5 与报告一致），摸底 §一.3／§二／§四 的 6 处旧写须下一版改齐；我方文档一律用 `shieldWearRateBase` |
+| **D31-2** | 报告 §2.3 给附属新增 `shield.wearRate` = 2.5 | 与摸底 **B-10 裁定倾向 ①**（全局单键、附属只存乘子）相悖；与 条 29（银盾四键 + 逐盾 `.reduction`/`.wear`，无 wearRate）相悖；且**附属无消费方**（主 mod 自算 `shieldWearRateBase × mult`）⇒ 死键 | **不落**该键；若主会话坚持保留，须写明消费点与双份同步责任 |
+| **D31-3** | 报告 §2.3 称「新增 **8** 键」，实际列 **9** 条（wearRate 1 + 曲线 5 + 银盾 spectralReduction 1 + 银盾 wear/spectralWear 2） | 逐行点数 | 删 D31-2 的死键后 **8 键自洽**（5 曲线 + 银盾 3），计数自然对齐 |
+| **D31-4** | 银盾双表：§2.3 键为**绝对** 65，§2.1 字段为 `spectralBonus`(0.25) 相加 | §2.1 伪码 `reduction + (isSpectral ? spectralBonus : 0)` | 我方拟取**绝对**字段（`spectralReduction` 0.65，直接读 config），四构造值全绝对 ⇒ 玩家改 `silver.reduction` 时幽魂面不漂移；此点请主会话在派修单确认 |
+| **D31-5** | `markSpectral` 契约两写：转发为 `void` + `Collections.synchronizedSet`；报告伪码为 `boolean` + 未同步 `Collections.newSetFromMap` | §1.2 代码块 | 我方只调 `isSpectral`，**编译面不受影响**；但契约面须钉一份（建议 `boolean` + synchronized，二者兼得） |
+| **D31-6** | 悬空引用：报告 B 表仅 **B-1…B-9**（回执亦称 B 9），正文两处引 **B-10**；B-10 实在摸底 §4.2 | 两件 grep | 报告下一版补 B-10 行或改引「摸底 B-10」 |
+
+- **W-16 判面更新（本条起有效，覆盖 条 28／29 的对应句；账本 append-only，不回改原文）**：
+  - **公式**：`net = max(1.0, raw×(1−r))`；`wear = (int) Math.floor(net × 2.5 × mult + 1.0E-4)`；epsilon **只加盾两臂**，工具臂 `(int)(blocked×decay)` 一字不动。
+  - **两格 FLIP**：铜 8 伤 `3.5999999×2.5 = 8.9999998`→**9**；艾德曼 8 伤 `1.5999999×2.5 = 3.9999998`→**4**（裸 `(int)` 得 8／3）。⇒ 条 29 预登记表的 **9／4 只在加 epsilon 时成立**；条 28「保留裸 `(int)`、银盾 969 为终态判行」**作废**（A-2 改 epsilon；A-3 判 L3 不判，969／2,327／5,818 降为预测值，禁标「不通过」）。
+  - **`block` 行 `factor=` 改打 `retained`（=1−r）非 r**：铜 0.450｜银物 0.600｜银幽 0.350｜远古 0.350｜秘银 0.250｜艾德曼 0.200｜木 0.500。
+  - **`wear` 行 `rate=` 打有效总率（=2.5×mult），非恒 2.5**：铜 2.500｜银物 3.500｜银幽 1.250｜远古 2.500｜秘银 2.500｜艾德曼 2.500；`mult=` 1.000／1.400／0.500／1.000／1.000／1.000。条 29「`rate=2.5 mult=0.5`」的读法**作废**（按 `rate=1.250 mult=0.500` 判）。
+  - **工具行形态位移（登记备查）**：`rate=na mult=na decay=<真实率>`；旧 W6／W7／W12／W14 若按 `rate=` 读数须改读 `decay=`（值未变）。
+  - **测试口前置条件（W-16 起窗必查）**：`etimghost` 注册在 `devTools` 门后（`ETIMConfig.devTools`），窗内须为 **true**；`src=` 判键为 `etimspectral`，不接受 `src=mob`。
+- **依赖序不变**：正式派修 + `ETIMShield`／`ETIMGhost` 同批 `publishToMavenLocal` + 回传 commit／钉值 → 我方编译对照 → 落码 → W-16。
+- **钉值**：本机 jar **30,285 B／`7D3F04F1…D4EE4D`／`c66c099`** 未动，0 rebuild；工作区在本条前干净。
